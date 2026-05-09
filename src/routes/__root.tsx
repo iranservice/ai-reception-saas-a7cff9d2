@@ -85,6 +85,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "AI Reception — Human-first reception workspace" },
+      { name: "description", content: "AI Reception Workspace is a premium UI/UX prototype for a B2B SaaS product." },
+      { property: "og:description", content: "AI Reception Workspace is a premium UI/UX prototype for a B2B SaaS product." },
+      { name: "twitter:description", content: "AI Reception Workspace is a premium UI/UX prototype for a B2B SaaS product." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/93e0d0f6-711c-474c-884d-ad2c41cf8c6b/id-preview-b0970bd7--bd179e44-2211-4f15-bcc7-fe40d1f91c7e.lovable.app-1778369692666.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/93e0d0f6-711c-474c-884d-ad2c41cf8c6b/id-preview-b0970bd7--bd179e44-2211-4f15-bcc7-fe40d1f91c7e.lovable.app-1778369692666.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
