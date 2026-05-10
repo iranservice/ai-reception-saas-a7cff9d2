@@ -55,27 +55,23 @@ function SettingsPage() {
         />
         <MockBanner />
 
-        <div className="grid gap-6 lg:grid-cols-[220px_1fr]">
-          {/* Side nav */}
-          <aside className="lg:sticky lg:top-6 lg:self-start">
-            <nav className="rounded-xl border border-border bg-card p-2 shadow-soft">
-              {sectionNav.map((s) => {
-                const Icon = s.icon;
-                return (
-                  <a
-                    key={s.id}
-                    href={`#${s.id}`}
-                    className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-secondary hover:text-foreground"
-                  >
-                    <Icon className="h-4 w-4" />
-                    {s.label}
-                  </a>
-                );
-              })}
-            </nav>
-          </aside>
+        <div className="flex gap-2 overflow-x-auto pb-1">
+          {sectionNav.map((s) => {
+            const Icon = s.icon;
+            return (
+              <a
+                key={s.id}
+                href={`#${s.id}`}
+                className="inline-flex shrink-0 items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground shadow-soft transition hover:bg-secondary hover:text-foreground"
+              >
+                <Icon className="h-3.5 w-3.5" />
+                {s.label}
+              </a>
+            );
+          })}
+        </div>
 
-          <div className="space-y-6 min-w-0">
+        <div className="space-y-6 min-w-0">
             {/* Business profile */}
             <Section
               id="business"
@@ -243,7 +239,6 @@ function SettingsPage() {
                 })}
               </div>
             </Section>
-          </div>
         </div>
       </div>
     </>
