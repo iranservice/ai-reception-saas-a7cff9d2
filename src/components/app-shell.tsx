@@ -110,6 +110,8 @@ export function AppShell({
   children?: React.ReactNode;
 }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const mobilePrimary = mobilePrimaryItems();
+  const mobileMore = mobileMoreItems();
 
   const [collapsed, setCollapsed] = useState<boolean>(() => {
     if (typeof window === "undefined") return false;
@@ -207,12 +209,12 @@ export function AppShell({
 
         {/* Mobile bottom nav */}
         <nav className="fixed inset-x-3 bottom-3 z-30 flex items-center justify-between gap-1 rounded-2xl border border-border bg-surface/95 p-1.5 shadow-pop backdrop-blur md:hidden">
-          {MOBILE_PRIMARY.map((item) => {
+          {mobilePrimary.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.to, item.exact);
             return (
               <Link
-                key={item.label}
+                key={item.id}
                 to={item.to as "/"}
                 className={`relative flex flex-1 flex-col items-center justify-center gap-0.5 rounded-xl py-1.5 text-[10px] font-medium transition ${
                   active
@@ -221,7 +223,7 @@ export function AppShell({
                 }`}
               >
                 <Icon className="h-[18px] w-[18px]" />
-                {item.label}
+                {item.id === "dashboard" ? "Home" : item.id === "customers" ? "People" : item.label}
                 {item.badge ? (
                   <span className="absolute right-2 top-1 grid h-4 min-w-[16px] place-items-center rounded-full bg-primary px-1 text-[9px] font-bold text-primary-foreground ring-2 ring-surface">
                     {item.badge}
@@ -258,11 +260,11 @@ export function AppShell({
                 </button>
               </div>
               <div className="grid grid-cols-3 gap-2 pb-6">
-                {MOBILE_MORE.map((it) => {
+                {mobileMore.map((it) => {
                   const Icon = it.icon;
                   return (
                     <Link
-                      key={it.label}
+                      key={it.id}
                       to={it.to as "/"}
                       onClick={() => setMoreOpen(false)}
                       className="relative flex flex-col items-center gap-1.5 rounded-xl border border-border bg-card px-2 py-3 text-[11px] font-medium text-foreground transition hover:bg-secondary"
