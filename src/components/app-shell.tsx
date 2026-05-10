@@ -332,7 +332,7 @@ function SharedSidebar({
             <TooltipTrigger asChild>
               <button
                 aria-label="Workspace"
-                className="relative grid h-10 w-10 place-items-center rounded-xl bg-primary text-primary-foreground font-semibold text-sm shadow-soft"
+                className="relative grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-primary to-[oklch(0.42_0.18_268)] text-primary-foreground font-semibold text-sm shadow-ring-primary"
               >
                 {ws.initials}
                 <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-success ring-2 ring-sidebar" />
