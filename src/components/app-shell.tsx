@@ -381,28 +381,12 @@ function AppSidebar({
           </div>
         )}
 
-        {collapsed ? (
-          <>
-            {BOTTOM_ITEMS.map((it) => (
+        <div className={collapsed ? "contents" : "flex items-center gap-1 rounded-lg border border-sidebar-border bg-surface p-1"}>
+          {collapsed ? (
+            BOTTOM_ITEMS.map((it) => (
               <BottomIcon key={it.label} icon={it.icon} label={it.label} />
-            ))}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={onToggle}
-                  aria-label="Expand sidebar"
-                  className="grid h-9 w-9 place-items-center rounded-lg text-muted-foreground transition hover:bg-sidebar-accent hover:text-foreground"
-                >
-                  <PanelLeftOpen className="h-[16px] w-[16px]" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="right" className="text-xs">
-                Expand sidebar
-              </TooltipContent>
-            </Tooltip>
-          </>
-        ) : (
-          <div className="flex items-center gap-1 rounded-lg border border-sidebar-border bg-surface p-1">
+            ))
+          ) : (
             {BOTTOM_ITEMS.map((it) => {
               const Icon = it.icon;
               return (
@@ -415,15 +399,9 @@ function AppSidebar({
                 </button>
               );
             })}
-            <button
-              onClick={onToggle}
-              aria-label="Collapse sidebar"
-              className="grid h-7 w-7 place-items-center rounded-md text-muted-foreground transition hover:bg-secondary hover:text-foreground"
-            >
-              <PanelLeftClose className="h-3.5 w-3.5" />
-            </button>
-          </div>
-        )}
+          )}
+          <SidebarCollapseButton collapsed={collapsed} onToggle={onToggle} />
+        </div>
       </div>
     </aside>
   );
