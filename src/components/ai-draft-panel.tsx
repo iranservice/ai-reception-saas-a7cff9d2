@@ -78,11 +78,11 @@ export function AIDraftPanel({
               <Sparkles className="h-3.5 w-3.5" />
             </span>
             <h3 className="text-sm font-semibold text-foreground">
-              Future AI Draft — Human Review Required
+              AI Draft — Human Review Required
             </h3>
           </div>
           <p className="mt-1 text-[11px] leading-snug text-muted-foreground">
-            AI can suggest a response, but the operator sends the final reply.
+            Suggested response. Operator sends final reply. AI does not auto-send in MVP.
           </p>
         </div>
         <span
