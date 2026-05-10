@@ -1034,58 +1034,16 @@ function isSameFilter(a: SectionFilter, b: SectionFilter) {
 function InboxSectionsPanel({
   selected,
   onSelect,
-  collapsed,
-  onToggleCollapsed,
 }: {
   selected: SectionFilter;
   onSelect: (s: SectionFilter) => void;
-  collapsed: boolean;
-  onToggleCollapsed: () => void;
 }) {
-  if (collapsed) {
-    return (
-      <div className="flex h-full flex-col items-center gap-2 py-3">
-        <button
-          onClick={onToggleCollapsed}
-          className="grid h-8 w-8 place-items-center rounded-lg border border-border text-muted-foreground hover:bg-secondary"
-          aria-label="Expand inbox sections"
-        >
-          <PanelLeftOpen className="h-4 w-4" />
-        </button>
-        <div className="my-1 h-px w-6 bg-border" />
-        {inboxSectionGroups.map((g) => (
-          <button
-            key={g.id}
-            onClick={() => onSelect(g.rows[0].filter)}
-            title={g.title}
-            className={`grid h-9 w-9 place-items-center rounded-lg text-muted-foreground transition hover:bg-secondary ${
-              selected.kind === g.id ? "bg-primary-soft text-primary" : ""
-            }`}
-          >
-            {g.id === "inbox" && <InboxIcon className="h-4 w-4" />}
-            {g.id === "channel" && <Radio className="h-4 w-4" />}
-            {g.id === "ai" && <Sparkles className="h-4 w-4" />}
-            {g.id === "operator" && <Users className="h-4 w-4" />}
-            {g.id === "priority" && <Flag className="h-4 w-4" />}
-          </button>
-        ))}
-      </div>
-    );
-  }
-
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center justify-between border-b border-border px-3 py-3">
         <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-          Work queues
+          All filters
         </div>
-        <button
-          onClick={onToggleCollapsed}
-          className="hidden lg:grid h-7 w-7 place-items-center rounded-md text-muted-foreground hover:bg-secondary"
-          aria-label="Collapse sections"
-        >
-          <PanelLeftClose className="h-3.5 w-3.5" />
-        </button>
       </div>
       <div className="flex-1 overflow-y-auto px-2 pb-4 pt-2">
         {inboxSectionGroups.map((g) => (
