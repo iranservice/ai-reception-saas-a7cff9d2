@@ -90,7 +90,7 @@ const deltaStyles = {
 
 function DashboardPage() {
   return (
-    <div className="mx-auto max-w-[1440px] px-4 py-6 lg:px-8 lg:py-7 space-y-5">
+    <div className="mx-auto max-w-[1600px] px-4 py-6 lg:px-8 lg:py-8 space-y-6">
       {/* Compact command bar header */}
       <header className="rounded-2xl border border-border bg-card shadow-soft">
         <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 lg:px-6">
