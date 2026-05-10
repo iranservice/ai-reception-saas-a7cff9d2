@@ -25,9 +25,9 @@ type Props = {
 };
 
 const confidenceTone: Record<DraftConfidence, string> = {
-  High: "bg-success/10 text-success border-success/20",
-  Medium: "bg-warning/15 text-warning-foreground border-warning/30",
-  Low: "bg-destructive/10 text-destructive border-destructive/20",
+  High: "bg-success/12 text-success border-success/25",
+  Medium: "bg-warning/20 text-warning-foreground border-warning/35",
+  Low: "bg-destructive/12 text-destructive border-destructive/25",
 };
 
 const confidencePct: Record<DraftConfidence, number> = {
@@ -37,9 +37,9 @@ const confidencePct: Record<DraftConfidence, number> = {
 };
 
 const stateTone: Record<DraftState, string> = {
-  pending: "bg-primary-soft text-primary border-primary/20",
-  accepted: "bg-success/10 text-success border-success/20",
-  edited: "bg-info/10 text-info border-info/20",
+  pending: "bg-ai-soft text-[oklch(0.40_0.18_290)] border-[oklch(0.55_0.20_295)]/25",
+  accepted: "bg-success/12 text-success border-success/25",
+  edited: "bg-info/12 text-info border-info/25",
   rejected: "bg-muted text-muted-foreground border-border",
 };
 
@@ -69,15 +69,15 @@ export function AIDraftPanel({
     "Some details (pricing, availability, insurance) may be outdated. Verify before sending.";
 
   return (
-    <div className="rounded-xl border border-primary/25 bg-gradient-to-b from-primary-soft/70 to-card shadow-soft">
+    <div className="overflow-hidden rounded-2xl border border-[oklch(0.55_0.20_295)]/25 bg-gradient-to-b from-[oklch(0.555_0.195_295)]/8 via-card to-card shadow-card">
       {/* Header */}
-      <div className="flex items-start justify-between gap-3 border-b border-primary/15 px-4 py-3">
+      <div className="flex items-start justify-between gap-3 border-b border-[oklch(0.55_0.20_295)]/15 bg-ai-soft px-4 py-3">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <span className="grid h-6 w-6 place-items-center rounded-md bg-primary/15 text-primary">
+            <span className="grid h-7 w-7 place-items-center rounded-lg gradient-ai text-ai-foreground shadow-soft">
               <Sparkles className="h-3.5 w-3.5" />
             </span>
-            <h3 className="text-sm font-semibold text-foreground">
+            <h3 className="text-[13px] font-semibold tracking-tight text-foreground">
               AI Draft — Human Review Required
             </h3>
           </div>
@@ -86,7 +86,7 @@ export function AIDraftPanel({
           </p>
         </div>
         <span
-          className={`shrink-0 rounded-md border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${stateTone[state]}`}
+          className={`shrink-0 rounded-md border px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${stateTone[state]}`}
         >
           {stateLabel[state]}
         </span>
@@ -172,7 +172,7 @@ export function AIDraftPanel({
       </div>
 
       {/* Actions */}
-      <div className="flex flex-wrap items-center gap-2 border-t border-primary/15 bg-card/60 px-4 py-3">
+      <div className="flex flex-wrap items-center gap-2 border-t border-[oklch(0.55_0.20_295)]/15 bg-card/60 px-4 py-3">
         {!editing ? (
           <>
             <button
@@ -180,7 +180,7 @@ export function AIDraftPanel({
                 setState("accepted");
                 onAccept(text);
               }}
-              className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground hover:opacity-95"
+              className="inline-flex items-center gap-1.5 rounded-lg gradient-ai px-3.5 py-1.5 text-xs font-semibold text-ai-foreground shadow-soft transition hover:opacity-95 active:translate-y-px"
             >
               <CheckCircle2 className="h-3.5 w-3.5" />
               Accept draft

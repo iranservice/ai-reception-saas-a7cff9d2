@@ -484,27 +484,25 @@ function NavRow({
     <Link
       to={item.to as "/"}
       className={[
-        "group relative flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[13px] font-medium transition-colors duration-200",
+        "group relative flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[13px] font-medium transition-all duration-200",
         active
-          ? "bg-sidebar-accent text-sidebar-accent-foreground"
-          : "text-sidebar-foreground/85 hover:bg-sidebar-accent/70 hover:text-sidebar-accent-foreground",
+          ? "nav-active"
+          : "text-sidebar-foreground/80 hover:bg-sidebar-accent/70 hover:text-sidebar-accent-foreground",
       ].join(" ")}
     >
-      {active && (
-        <span className="absolute left-0 top-1.5 bottom-1.5 w-0.5 rounded-r-full bg-primary" />
-      )}
+      {active && <span className="nav-active-bar" />}
       <Icon
         className={[
-          "h-[15px] w-[15px] transition-colors",
+          "h-[16px] w-[16px] transition-colors",
           active ? "text-primary" : "text-muted-foreground group-hover:text-foreground",
         ].join(" ")}
       />
       <span className="flex-1 truncate">{item.label}</span>
       {item.badge ? (
         <span
-          className={`rounded-md px-1.5 py-0.5 text-[10px] font-semibold tabular-nums ${
+          className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold tabular-nums shadow-soft ${
             active
-              ? "bg-primary text-primary-foreground"
+              ? "gradient-primary text-primary-foreground"
               : "bg-secondary text-secondary-foreground"
           }`}
         >
