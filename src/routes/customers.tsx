@@ -12,6 +12,9 @@ import {
   type Channel,
 } from "@/lib/mock-data";
 import { Search, Download, Shield, Users, ChevronRight, AlertTriangle, MessageCircle } from "lucide-react";
+import type { ChannelKey } from "@/lib/mock-data";
+
+const channelToKey = (c: Channel): ChannelKey => (c === "webform" ? "webchat" : (c as ChannelKey));
 
 export const Route = createFileRoute("/customers")({
   head: () => ({
@@ -227,7 +230,7 @@ function CustomersPage() {
                         </td>
                         <td className="px-3 py-3">
                           <div className="flex items-center gap-2">
-                            <ChannelIcon channel={r.lastInboundChannel === "webform" ? "webchat" : r.lastInboundChannel as never} size={22} />
+                            <ChannelIcon channel={channelToKey(r.lastInboundChannel)} size={22} />
                             <span className="text-xs text-muted-foreground">{r.lastSeen}</span>
                           </div>
                         </td>
