@@ -68,16 +68,24 @@ const stats: Stat[] = [
 
 const toneStyles: Record<Stat["tone"], string> = {
   neutral: "bg-secondary text-secondary-foreground ring-border",
-  primary: "bg-primary-soft text-primary ring-primary/20",
+  primary: "bg-primary-soft text-primary ring-primary/25",
   warning: "bg-warning/15 text-warning-foreground ring-warning/30",
-  danger: "bg-destructive/10 text-destructive ring-destructive/20",
-  success: "bg-success/10 text-success ring-success/20",
+  danger: "bg-destructive/10 text-destructive ring-destructive/25",
+  success: "bg-success/10 text-success ring-success/25",
+};
+
+const toneAccent: Record<Stat["tone"], string> = {
+  neutral: "var(--color-border-strong)",
+  primary: "var(--color-primary)",
+  warning: "var(--color-warning)",
+  danger: "var(--color-destructive)",
+  success: "var(--color-success)",
 };
 
 const deltaStyles = {
-  up: "text-success bg-success/10",
-  down: "text-warning-foreground bg-warning/15",
-  flat: "text-muted-foreground bg-secondary",
+  up: "text-success bg-success/10 ring-1 ring-inset ring-success/20",
+  down: "text-warning-foreground bg-warning/15 ring-1 ring-inset ring-warning/25",
+  flat: "text-muted-foreground bg-secondary ring-1 ring-inset ring-border",
 };
 
 function DashboardPage() {
@@ -143,18 +151,19 @@ function DashboardPage() {
           return (
             <div
               key={s.label}
-              className="group relative overflow-hidden rounded-xl border border-border bg-card p-4 shadow-soft transition hover:shadow-card hover:-translate-y-px"
+              style={{ ["--kpi-accent" as never]: toneAccent[s.tone] }}
+              className="kpi-accent group relative overflow-hidden rounded-xl border border-border bg-card p-4 shadow-card transition hover:shadow-elev hover:-translate-y-0.5"
             >
               <div className="flex items-start justify-between gap-2">
-                <span className="text-[10.5px] font-semibold uppercase tracking-[0.06em] text-muted-foreground">
+                <span className="text-[10.5px] font-semibold uppercase tracking-[0.07em] text-muted-foreground">
                   {s.label}
                 </span>
-                <div className={`grid h-7 w-7 shrink-0 place-items-center rounded-lg ring-1 ring-inset ${toneStyles[s.tone]}`}>
-                  <Icon className="h-3.5 w-3.5" />
+                <div className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg ring-1 ring-inset ${toneStyles[s.tone]}`}>
+                  <Icon className="h-4 w-4" />
                 </div>
               </div>
-              <div className="mt-2 flex items-end justify-between gap-2">
-                <div className="text-[28px] font-semibold leading-none tracking-tight tabular-nums">
+              <div className="mt-3 flex items-end justify-between gap-2">
+                <div className="text-[30px] font-semibold leading-none tracking-tight tabular-nums">
                   {s.value}
                 </div>
                 {s.delta && (
@@ -164,7 +173,7 @@ function DashboardPage() {
                   </span>
                 )}
               </div>
-              <div className="mt-1.5 text-[11.5px] leading-snug text-muted-foreground">{s.hint}</div>
+              <div className="mt-2 text-[11.5px] leading-snug text-muted-foreground">{s.hint}</div>
             </div>
           );
         })}
@@ -270,54 +279,68 @@ function DashboardPage() {
               All sources <ArrowUpRight className="h-3 w-3" />
             </Link>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-px bg-border">
-            {channelOverview.map((c) => {
-              const active = c.status === "Mock Active";
-              const planned = c.status === "Planned";
-              const healthDot =
-                c.health === "healthy" ? "bg-success" :
-                c.health === "degraded" ? "bg-warning" :
-                c.health === "offline" ? "bg-destructive" : "bg-muted-foreground/40";
-              return (
-                <Link
-                  key={c.key}
-                  to={active ? "/inbox" : "/channels"}
-                  className="group flex flex-col gap-2 bg-card px-3.5 py-3 transition hover:bg-surface-muted/60"
-                >
-                  <div className="flex items-center justify-between">
-                    <ChannelIcon channel={c.key} size={26} />
-                    {active ? (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-success/10 px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-wider text-success ring-1 ring-success/20">
-                        <span className={`h-1.5 w-1.5 rounded-full ${healthDot}`} /> Active
-                      </span>
-                    ) : (
-                      <span className={`rounded-full px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-wider ring-1 ring-inset ${planned ? "bg-secondary text-muted-foreground ring-border" : "bg-surface-muted text-muted-foreground/70 ring-border"}`}>
-                        {c.status === "Future" ? "Future" : "Planned"}
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="text-[12.5px] font-semibold">{c.name}</div>
-                    {c.unread > 0 && (
-                      <span className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-bold text-primary tabular-nums">{c.unread}</span>
-                    )}
-                  </div>
-                  {active ? (
-                    <div className="space-y-0.5 text-[10.5px] text-muted-foreground">
-                      <div className="flex items-center justify-between">
-                        <span className="tabular-nums">{c.customers} customers</span>
-                        {c.waiting > 0 && (
-                          <span className="font-medium text-warning-foreground tabular-nums">{c.waiting} waiting</span>
-                        )}
+          <div className="p-3 sm:p-4">
+            <div
+              className="grid gap-2.5"
+              style={{ gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))" }}
+            >
+              {channelOverview.map((c) => {
+                const active = c.status === "Mock Active";
+                const planned = c.status === "Planned";
+                const healthDot =
+                  c.health === "healthy" ? "bg-success" :
+                  c.health === "degraded" ? "bg-warning" :
+                  c.health === "offline" ? "bg-destructive" : "bg-muted-foreground/40";
+                return (
+                  <Link
+                    key={c.key}
+                    to={active ? "/inbox" : "/channels"}
+                    className={`group relative flex flex-col gap-2.5 rounded-xl border bg-card p-3.5 shadow-soft transition hover:-translate-y-0.5 hover:shadow-card ${active ? "border-border hover:border-primary/30" : "border-dashed border-border/80 bg-surface-muted/40"}`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className={`grid h-9 w-9 place-items-center rounded-lg ring-1 ring-inset ${active ? "bg-primary-soft ring-primary/15" : "bg-secondary ring-border"}`}>
+                        <ChannelIcon channel={c.key} size={20} />
                       </div>
-                      <div className="truncate opacity-80">Last · {c.lastMessage}</div>
+                      {active ? (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-success/10 px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-wider text-success ring-1 ring-success/20">
+                          <span className={`h-1.5 w-1.5 rounded-full ${healthDot}`} /> Active
+                        </span>
+                      ) : (
+                        <span className={`rounded-full px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-wider ring-1 ring-inset ${planned ? "bg-secondary text-muted-foreground ring-border" : "bg-surface-muted text-muted-foreground/70 ring-border"}`}>
+                          {c.status === "Future" ? "Future" : "Planned"}
+                        </span>
+                      )}
                     </div>
-                  ) : (
-                    <div className="text-[10.5px] text-muted-foreground/80">Not enabled in MVP</div>
-                  )}
-                </Link>
-              );
-            })}
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="text-[13px] font-semibold tracking-tight truncate">{c.name}</div>
+                      {c.unread > 0 && (
+                        <span className="rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-bold text-primary-foreground tabular-nums shadow-soft">{c.unread}</span>
+                      )}
+                    </div>
+                    {active ? (
+                      <div className="grid grid-cols-3 gap-1 border-t border-border/70 pt-2 text-center">
+                        <div>
+                          <div className="text-[12px] font-semibold tabular-nums">{c.customers}</div>
+                          <div className="text-[9.5px] uppercase tracking-wider text-muted-foreground">Custs</div>
+                        </div>
+                        <div>
+                          <div className={`text-[12px] font-semibold tabular-nums ${c.waiting > 0 ? "text-warning-foreground" : ""}`}>{c.waiting}</div>
+                          <div className="text-[9.5px] uppercase tracking-wider text-muted-foreground">Wait</div>
+                        </div>
+                        <div>
+                          <div className="text-[10.5px] font-medium tabular-nums truncate" title={c.lastMessage}>{c.lastMessage}</div>
+                          <div className="text-[9.5px] uppercase tracking-wider text-muted-foreground">Last</div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="border-t border-dashed border-border/70 pt-2 text-[10.5px] leading-snug text-muted-foreground/90">
+                        {c.description}
+                      </div>
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         </div>
 
