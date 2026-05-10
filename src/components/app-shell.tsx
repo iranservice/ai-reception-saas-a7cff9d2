@@ -407,6 +407,42 @@ function AppSidebar({
   );
 }
 
+function SidebarCollapseButton({
+  collapsed,
+  onToggle,
+}: {
+  collapsed: boolean;
+  onToggle: () => void;
+}) {
+  const Icon = collapsed ? PanelLeftOpen : PanelLeftClose;
+  const label = collapsed ? "Expand sidebar" : "Collapse sidebar";
+  const button = (
+    <button
+      onClick={onToggle}
+      aria-label={label}
+      className={[
+        "grid place-items-center text-muted-foreground transition hover:text-foreground",
+        collapsed
+          ? "h-9 w-9 rounded-lg hover:bg-sidebar-accent"
+          : "h-7 w-7 rounded-md hover:bg-secondary",
+      ].join(" ")}
+    >
+      <Icon className={collapsed ? "h-[16px] w-[16px]" : "h-3.5 w-3.5"} />
+    </button>
+  );
+
+  if (!collapsed) return button;
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{button}</TooltipTrigger>
+      <TooltipContent side="right" className="text-xs">
+        {label}
+      </TooltipContent>
+    </Tooltip>
+  );
+}
+
 function NavRow({
   item,
   collapsed,
