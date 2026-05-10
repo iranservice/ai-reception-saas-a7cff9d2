@@ -7,9 +7,7 @@ import {
   conversations,
   customers,
   channelLabel,
-  channels as channelInfos,
   members,
-  type Channel,
   type InboxStatus,
   type Priority,
   type Message,
@@ -32,9 +30,6 @@ import {
   Mail,
   ExternalLink,
   ChevronRight,
-  ArrowLeft,
-  PanelRight,
-  X,
 } from "lucide-react";
 
 export const Route = createFileRoute("/inbox")({
@@ -47,14 +42,12 @@ export const Route = createFileRoute("/inbox")({
   component: InboxPage,
 });
 
-type FilterId = "all" | "unread" | "unassigned" | "mine" | InboxStatus;
-const statusFilters: { id: FilterId; label: string }[] = [
+const statusFilters: { id: "all" | InboxStatus; label: string }[] = [
   { id: "all", label: "All" },
-  { id: "unread", label: "Unread" },
-  { id: "mine", label: "Assigned to me" },
-  { id: "unassigned", label: "Unassigned" },
-  { id: "needs-followup", label: "Needs follow-up" },
+  { id: "new", label: "New" },
+  { id: "open", label: "Open" },
   { id: "waiting", label: "Waiting" },
+  { id: "needs-followup", label: "Needs follow-up" },
   { id: "closed", label: "Closed" },
 ];
 
@@ -102,38 +95,26 @@ function PriorityFlag({ priority }: { priority: Priority }) {
   );
 }
 
-const ME_ID = "u3"; // Priya Raman — current operator (mock)
-
 function InboxPage() {
   const [activeId, setActiveId] = useState(conversations[0].id);
-  const [filter, setFilter] = useState<FilterId>("all");
-  const [channelFilter, setChannelFilter] = useState<Channel | "all">("all");
+  const [filter, setFilter] = useState<"all" | InboxStatus>("all");
   const [query, setQuery] = useState("");
   const [draft, setDraft] = useState("");
   const [noteMode, setNoteMode] = useState(false);
-  const [mobileView, setMobileView] = useState<"list" | "thread">("list");
-  const [contextOpen, setContextOpen] = useState(false);
 
   const filtered = useMemo(() => {
     return conversations.filter((c) => {
+      const matchStatus = filter === "all" || c.inboxStatus === filter;
       const cust = customers.find((x) => x.id === c.customerId)!;
-      let ok = true;
-      if (filter === "unread") ok = c.unread;
-      else if (filter === "mine") ok = c.assignee === ME_ID;
-      else if (filter === "unassigned") ok = !c.assignee;
-      else if (filter !== "all") ok = c.inboxStatus === filter;
-      if (channelFilter !== "all" && c.channel !== channelFilter) ok = false;
       const q = query.trim().toLowerCase();
-      if (q) {
-        ok =
-          ok &&
-          (cust.name.toLowerCase().includes(q) ||
-            c.subject.toLowerCase().includes(q) ||
-            c.preview.toLowerCase().includes(q));
-      }
-      return ok;
+      const matchQuery =
+        !q ||
+        cust.name.toLowerCase().includes(q) ||
+        c.subject.toLowerCase().includes(q) ||
+        c.preview.toLowerCase().includes(q);
+      return matchStatus && matchQuery;
     });
-  }, [filter, channelFilter, query]);
+  }, [filter, query]);
 
   const active = conversations.find((c) => c.id === activeId)!;
   const customer = customers.find((c) => c.id === active.customerId)!;
@@ -143,18 +124,12 @@ function InboxPage() {
     (c) => c.customerId === active.customerId && c.id !== active.id,
   );
 
-  const activeChannels: Channel[] = Array.from(new Set(conversations.map((c) => c.channel)));
-
   return (
     <AppShell>
-      <div className="grid h-[calc(100vh-3.5rem-4rem)] md:h-[calc(100vh-3.5rem)] grid-cols-1 md:grid-cols-[340px_1fr] xl:grid-cols-[340px_1fr_340px]">
+      <div className="grid h-[calc(100vh-3.5rem)] grid-cols-1 md:grid-cols-[360px_1fr] xl:grid-cols-[360px_1fr_340px]">
         {/* Column 1: Conversation list */}
-        <div
-          className={`${
-            mobileView === "list" ? "flex" : "hidden"
-          } md:flex min-h-0 flex-col border-r border-border bg-surface`}
-        >
-          <div className="space-y-2.5 border-b border-border p-3">
+        <div className="flex min-h-0 flex-col border-r border-border bg-surface">
+          <div className="space-y-3 border-b border-border p-4">
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-sm font-semibold">Inbox</h2>
@@ -175,12 +150,12 @@ function InboxPage() {
                 className="h-8 w-full rounded-md border border-border bg-background pl-8 pr-2 text-xs placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/30"
               />
             </div>
-            <div className="-mx-1 flex gap-1 overflow-x-auto px-1 pb-0.5">
+            <div className="flex flex-wrap gap-1">
               {statusFilters.map((f) => (
                 <button
                   key={f.id}
                   onClick={() => setFilter(f.id)}
-                  className={`shrink-0 rounded-md px-2 py-1 text-[11px] font-medium transition ${
+                  className={`rounded-md px-2 py-1 text-[11px] font-medium transition ${
                     filter === f.id
                       ? "bg-foreground text-background"
                       : "text-muted-foreground hover:bg-secondary"
@@ -189,34 +164,6 @@ function InboxPage() {
                   {f.label}
                 </button>
               ))}
-            </div>
-            <div className="-mx-1 flex gap-1 overflow-x-auto px-1">
-              <button
-                onClick={() => setChannelFilter("all")}
-                className={`shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider transition ${
-                  channelFilter === "all"
-                    ? "border-primary bg-primary-soft text-primary"
-                    : "border-border text-muted-foreground hover:bg-secondary"
-                }`}
-              >
-                All channels
-              </button>
-              {activeChannels.map((ch) => {
-                const sel = channelFilter === ch;
-                return (
-                  <button
-                    key={ch}
-                    onClick={() => setChannelFilter(ch)}
-                    className={`shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider transition ${
-                      sel
-                        ? "border-primary bg-primary-soft text-primary"
-                        : "border-border text-muted-foreground hover:bg-secondary"
-                    }`}
-                  >
-                    {channelLabel[ch]}
-                  </button>
-                );
-              })}
             </div>
           </div>
           <ul className="flex-1 overflow-y-auto">
@@ -228,10 +175,7 @@ function InboxPage() {
               return (
                 <li key={c.id}>
                   <button
-                    onClick={() => {
-                      setActiveId(c.id);
-                      setMobileView("thread");
-                    }}
+                    onClick={() => setActiveId(c.id)}
                     className={`relative w-full border-b border-border px-4 py-3 text-left transition ${
                       selected ? "bg-primary-soft/40" : "hover:bg-surface-muted"
                     }`}
@@ -289,48 +233,30 @@ function InboxPage() {
         </div>
 
         {/* Column 2: Conversation thread */}
-        <div
-          className={`${
-            mobileView === "thread" ? "flex" : "hidden"
-          } md:flex min-h-0 flex-col bg-background`}
-        >
+        <div className="flex min-h-0 flex-col bg-background">
           {/* Thread header */}
-          <div className="border-b border-border bg-surface px-3 py-3 md:px-6 md:py-3.5">
+          <div className="border-b border-border bg-surface px-6 py-3.5">
             <div className="flex items-center justify-between gap-3">
-              <div className="flex min-w-0 items-center gap-2 md:gap-3">
-                <button
-                  onClick={() => setMobileView("list")}
-                  className="grid h-8 w-8 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-secondary md:hidden"
-                  aria-label="Back to inbox"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                </button>
+              <div className="flex min-w-0 items-center gap-3">
                 <Avatar initials={customer.initials} tone="primary" />
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
                     <h2 className="truncate text-sm font-semibold">{active.subject}</h2>
                     <InboxStatusChip status={active.inboxStatus} />
-                    <span className="hidden md:inline-flex"><PriorityFlag priority={active.priority} /></span>
+                    <PriorityFlag priority={active.priority} />
                   </div>
                   <p className="truncate text-xs text-muted-foreground">
-                    {customer.name} · via {channelLabel[active.channel]}
+                    {customer.name} · {customer.email} · via {channelLabel[active.channel]}
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-1">
-                <span className="hidden md:inline-flex"><ActionBtn icon={UserPlus} label="Assign" /></span>
-                <span className="hidden lg:inline-flex"><ActionBtn icon={Tag} label="Classify" /></span>
-                <span className="hidden lg:inline-flex"><ActionBtn icon={Flag} label="Priority" /></span>
-                <button className="hidden md:inline-flex items-center gap-1.5 rounded-md bg-foreground px-2.5 py-1.5 text-xs font-medium text-background hover:opacity-90">
+                <ActionBtn icon={UserPlus} label="Assign" />
+                <ActionBtn icon={Tag} label="Classify" />
+                <ActionBtn icon={Flag} label="Priority" />
+                <button className="inline-flex items-center gap-1.5 rounded-md bg-foreground px-2.5 py-1.5 text-xs font-medium text-background hover:opacity-90">
                   <CheckCircle2 className="h-3.5 w-3.5" />
                   Close
-                </button>
-                <button
-                  onClick={() => setContextOpen(true)}
-                  className="grid h-8 w-8 place-items-center rounded-md text-muted-foreground hover:bg-secondary xl:hidden"
-                  aria-label="Open customer context"
-                >
-                  <PanelRight className="h-4 w-4" />
                 </button>
                 <button className="grid h-8 w-8 place-items-center rounded-md text-muted-foreground hover:bg-secondary">
                   <MoreHorizontal className="h-4 w-4" />
@@ -458,34 +384,8 @@ function InboxPage() {
           </div>
         </div>
 
-        {/* Column 3: Customer context — drawer below xl, sidebar at xl+ */}
-        {contextOpen && (
-          <button
-            aria-label="Close context"
-            onClick={() => setContextOpen(false)}
-            className="fixed inset-0 z-40 bg-foreground/30 backdrop-blur-sm xl:hidden"
-          />
-        )}
-        <aside
-          className={`${
-            contextOpen
-              ? "fixed inset-y-0 right-0 z-50 flex w-[88vw] max-w-sm shadow-pop"
-              : "hidden xl:flex"
-          } min-h-0 flex-col overflow-y-auto border-l border-border bg-surface xl:static xl:z-auto xl:w-auto xl:max-w-none xl:shadow-none`}
-        >
-          {contextOpen && (
-            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-surface/95 px-4 py-2 backdrop-blur xl:hidden">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Customer context
-              </span>
-              <button
-                onClick={() => setContextOpen(false)}
-                className="grid h-7 w-7 place-items-center rounded-md hover:bg-secondary"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-          )}
+        {/* Column 3: Customer context */}
+        <aside className="hidden min-h-0 flex-col overflow-y-auto border-l border-border bg-surface xl:flex">
           {/* Profile */}
           <div className="border-b border-border p-5">
             <div className="flex items-start justify-between gap-3">
