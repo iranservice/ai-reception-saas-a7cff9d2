@@ -347,7 +347,7 @@ function SharedSidebar({
           </Tooltip>
         ) : (
           <button className="flex w-full items-center gap-2.5 rounded-xl border border-sidebar-border bg-surface px-2.5 py-2 text-left transition hover:bg-sidebar-accent">
-            <div className="relative grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-primary text-primary-foreground font-semibold text-sm">
+            <div className="relative grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-primary to-[oklch(0.42_0.18_268)] text-primary-foreground font-semibold text-sm shadow-soft">
               {ws.initials}
               <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-success ring-2 ring-surface" />
             </div>
