@@ -2,12 +2,12 @@ import type { ConvStatus, Channel, ChipStatus } from "@/lib/mock-data";
 import { Info } from "lucide-react";
 
 const chipStyles: Record<ChipStatus, string> = {
-  new: "bg-info/10 text-info ring-info/20",
-  open: "bg-success/10 text-success ring-success/20",
-  waiting: "bg-warning/15 text-warning-foreground ring-warning/30",
+  new: "bg-info/12 text-info ring-info/30",
+  open: "bg-success/12 text-success ring-success/25",
+  waiting: "bg-warning/20 text-warning-foreground ring-warning/40",
   closed: "bg-secondary text-muted-foreground ring-border",
-  "needs-review": "bg-primary-soft text-primary ring-primary/20",
-  "access-denied": "bg-destructive/10 text-destructive ring-destructive/20",
+  "needs-review": "bg-ai-soft text-[oklch(0.40_0.18_290)] ring-[oklch(0.55_0.20_295)]/25",
+  "access-denied": "bg-destructive/12 text-destructive ring-destructive/30",
   future: "bg-surface-muted text-muted-foreground ring-border",
 };
 
