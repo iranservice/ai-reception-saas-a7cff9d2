@@ -629,14 +629,14 @@ function InboxPage() {
         </SheetContent>
       </Sheet>
 
-      {/* Inbox sections drawer for mobile + tablet */}
+      {/* All filters drawer (operators, priority, AI review, channels) */}
       <Sheet open={sectionsOpen} onOpenChange={setSectionsOpen}>
         <SheetContent
           side="left"
-          className="w-[280px] overflow-y-auto p-0 lg:hidden"
+          className="w-[300px] overflow-y-auto p-0"
         >
-          <SheetTitle className="sr-only">Inbox sections</SheetTitle>
-          {sectionsPanel}
+          <SheetTitle className="sr-only">All filters</SheetTitle>
+          {allFiltersPanel}
         </SheetContent>
       </Sheet>
     </>
