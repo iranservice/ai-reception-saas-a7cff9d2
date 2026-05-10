@@ -192,7 +192,7 @@ function InboxPage() {
               return (
                 <li key={c.id}>
                   <button
-                    onClick={() => setActiveId(c.id)}
+                    onClick={() => openConversation(c.id)}
                     className={`relative w-full border-b border-border px-4 py-3 text-left transition ${
                       selected ? "bg-primary-soft/40" : "hover:bg-surface-muted"
                     }`}
@@ -250,45 +250,80 @@ function InboxPage() {
         </div>
 
         {/* Column 2: Conversation thread */}
-        <div className="flex min-h-0 flex-col bg-background">
+        <div
+          className={`min-h-0 flex-col bg-background ${
+            mobileView === "thread" ? "flex" : "hidden"
+          } md:flex`}
+        >
           {/* Thread header */}
-          <div className="border-b border-border bg-surface px-6 py-3.5">
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex min-w-0 items-center gap-3">
+          <div className="border-b border-border bg-surface px-4 py-3 sm:px-6 sm:py-3.5">
+            <div className="flex items-center justify-between gap-2 sm:gap-3">
+              <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+                {/* Mobile back button */}
+                <button
+                  onClick={() => setMobileView("list")}
+                  className="grid h-8 w-8 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-secondary md:hidden"
+                  aria-label="Back to inbox"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </button>
                 <Avatar initials={customer.initials} tone="primary" />
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
                     <h2 className="truncate text-sm font-semibold">{active.subject}</h2>
-                    <InboxStatusChip status={active.inboxStatus} />
-                    <PriorityFlag priority={active.priority} />
+                    <span className="hidden sm:inline-flex">
+                      <InboxStatusChip status={active.inboxStatus} />
+                    </span>
+                    <span className="hidden md:inline-flex">
+                      <PriorityFlag priority={active.priority} />
+                    </span>
                   </div>
-                  <p className="truncate text-xs text-muted-foreground">
-                    {customer.name} · {customer.email} · via {channelLabel[active.channel]}
+                  <p className="truncate text-[11px] sm:text-xs text-muted-foreground">
+                    {customer.name} · via {channelLabel[active.channel]}
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-1">
-                <ActionBtn icon={UserPlus} label="Assign" />
-                <ActionBtn icon={Tag} label="Classify" />
-                <ActionBtn icon={Flag} label="Priority" />
-                <button className="inline-flex items-center gap-1.5 rounded-md bg-foreground px-2.5 py-1.5 text-xs font-medium text-background hover:opacity-90">
+                {/* Desktop actions */}
+                <span className="hidden lg:inline-flex items-center gap-1">
+                  <ActionBtn icon={UserPlus} label="Assign" />
+                  <ActionBtn icon={Tag} label="Classify" />
+                  <ActionBtn icon={Flag} label="Priority" />
+                </span>
+                <button className="hidden sm:inline-flex items-center gap-1.5 rounded-md bg-foreground px-2.5 py-1.5 text-xs font-medium text-background hover:opacity-90">
                   <CheckCircle2 className="h-3.5 w-3.5" />
                   Close
+                </button>
+                {/* Open context drawer (mobile + tablet) */}
+                <button
+                  onClick={() => setContextOpen(true)}
+                  className="grid h-8 w-8 place-items-center rounded-md text-muted-foreground hover:bg-secondary xl:hidden"
+                  aria-label="Open customer context"
+                >
+                  <PanelRight className="h-4 w-4" />
                 </button>
                 <button className="grid h-8 w-8 place-items-center rounded-md text-muted-foreground hover:bg-secondary">
                   <MoreHorizontal className="h-4 w-4" />
                 </button>
               </div>
             </div>
+            {/* Mobile-only chip row */}
+            <div className="mt-2 flex items-center gap-1.5 sm:hidden">
+              <InboxStatusChip status={active.inboxStatus} />
+              <PriorityFlag priority={active.priority} />
+              {active.classification && (
+                <span className="rounded-md border border-border bg-surface-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+                  {active.classification}
+                </span>
+              )}
+            </div>
             {active.classification && (
-              <div className="mt-2.5 flex items-center gap-2 text-[11px] text-muted-foreground">
+              <div className="mt-2.5 hidden sm:flex items-center gap-2 text-[11px] text-muted-foreground">
                 <span className="rounded-md border border-border bg-surface-muted px-1.5 py-0.5 font-medium">
                   {active.classification}
                 </span>
                 <span>·</span>
-                <span>
-                  {assignee ? `Assigned to ${assignee.name}` : "Unassigned"}
-                </span>
+                <span>{assignee ? `Assigned to ${assignee.name}` : "Unassigned"}</span>
               </div>
             )}
           </div>
