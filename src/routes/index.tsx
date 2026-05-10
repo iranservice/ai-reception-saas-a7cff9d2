@@ -155,28 +155,28 @@ function DashboardPage() {
             <div
               key={s.label}
               style={{ ["--kpi-accent" as never]: toneAccent[s.tone] }}
-              className="kpi-accent group relative overflow-hidden rounded-xl border border-border bg-card p-4 shadow-card transition hover:shadow-elev hover:-translate-y-0.5"
+              className="kpi-accent group relative overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-card transition hover:shadow-elev hover:-translate-y-0.5"
             >
               <div className="flex items-start justify-between gap-2">
-                <span className="text-[10.5px] font-semibold uppercase tracking-[0.07em] text-muted-foreground">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
                   {s.label}
                 </span>
-                <div className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg ring-1 ring-inset ${toneStyles[s.tone]}`}>
-                  <Icon className="h-4 w-4" />
+                <div className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl ring-1 ring-inset ${toneStyles[s.tone]}`}>
+                  <Icon className="h-[18px] w-[18px]" />
                 </div>
               </div>
-              <div className="mt-3 flex items-end justify-between gap-2">
-                <div className="text-[30px] font-semibold leading-none tracking-tight tabular-nums">
+              <div className="mt-4 flex items-end justify-between gap-2">
+                <div className="text-[34px] font-semibold leading-none tracking-tight tabular-nums">
                   {s.value}
                 </div>
                 {s.delta && (
-                  <span className={`inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-[10.5px] font-semibold ${deltaStyles[s.delta.dir]}`}>
+                  <span className={`inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-[10.5px] font-bold ${deltaStyles[s.delta.dir]}`}>
                     {Trend && <Trend className="h-3 w-3" />}
                     {s.delta.value}
                   </span>
                 )}
               </div>
-              <div className="mt-2 text-[11.5px] leading-snug text-muted-foreground">{s.hint}</div>
+              <div className="mt-2 text-[12px] leading-snug text-muted-foreground">{s.hint}</div>
             </div>
           );
         })}
