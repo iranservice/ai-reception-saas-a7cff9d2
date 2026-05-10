@@ -9,18 +9,24 @@ const SIDEBAR_STORAGE_KEY = "app.sidebar.collapsed";
 export function AppShell({ children }: { children?: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState<boolean>(() => {
     if (typeof window === "undefined") return false;
+    if (window.matchMedia("(max-width: 1279px)").matches) return true;
     const stored = window.localStorage.getItem(SIDEBAR_STORAGE_KEY);
     if (stored === "1") return true;
     if (stored === "0") return false;
-    return window.matchMedia("(max-width: 1279px)").matches;
+    return false;
   });
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (window.localStorage.getItem(SIDEBAR_STORAGE_KEY) !== null) return;
 
     const media = window.matchMedia("(max-width: 1279px)");
-    const syncCollapsed = () => setCollapsed(media.matches);
+    const syncCollapsed = () => {
+      if (media.matches) {
+        setCollapsed(true);
+        return;
+      }
+      setCollapsed(window.localStorage.getItem(SIDEBAR_STORAGE_KEY) === "1");
+    };
     syncCollapsed();
     media.addEventListener("change", syncCollapsed);
     return () => media.removeEventListener("change", syncCollapsed);
