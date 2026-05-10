@@ -6,8 +6,8 @@ import {
   Users,
   UserCog,
   Settings,
-  ScrollText,
-  LayoutGrid,
+  FileCheck2,
+  AlertCircle,
   Search,
   Sparkles,
   Bell,
@@ -18,6 +18,9 @@ import {
   HelpCircle,
   ChevronsUpDown,
   Shield,
+  User,
+  MoreHorizontal,
+  X,
 } from "lucide-react";
 import { workspaces, type WorkspaceRole } from "@/lib/mock-data";
 import {
@@ -27,6 +30,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+/* ───────────────────────── Single shared menu config ───────────────────────── */
+
 type NavItem = {
   to: string;
   label: string;
@@ -35,23 +40,60 @@ type NavItem = {
   badge?: number;
 };
 
-const navItems: NavItem[] = [
-  { to: "/", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { to: "/inbox", label: "Inbox", icon: Inbox, badge: 4 },
-  { to: "/channels", label: "Channels", icon: Radio, badge: 8 },
-  { to: "/customers", label: "Customers", icon: Users },
-  { to: "/members", label: "Members", icon: UserCog },
-  { to: "/settings", label: "Settings", icon: Settings },
-  { to: "/audit", label: "Audit log", icon: ScrollText, badge: 2 },
-  { to: "/states", label: "States", icon: LayoutGrid },
+type NavSection = {
+  id: string;
+  title: string;
+  items: NavItem[];
+};
+
+const NAV_SECTIONS: NavSection[] = [
+  {
+    id: "workspace",
+    title: "Workspace",
+    items: [
+      { to: "/", label: "Dashboard", icon: LayoutDashboard, exact: true },
+      { to: "/inbox", label: "Inbox", icon: Inbox, badge: 4 },
+      { to: "/channels", label: "Channels", icon: Radio, badge: 8 },
+      { to: "/customers", label: "Customers", icon: Users },
+    ],
+  },
+  {
+    id: "management",
+    title: "Management",
+    items: [
+      { to: "/members", label: "Members", icon: UserCog },
+      { to: "/settings", label: "Settings", icon: Settings },
+    ],
+  },
+  {
+    id: "trust",
+    title: "Trust & System",
+    items: [
+      { to: "/audit", label: "Audit log", icon: FileCheck2, badge: 2 },
+      { to: "/states", label: "States", icon: AlertCircle },
+    ],
+  },
 ];
 
-const mobileNav: NavItem[] = [
+const BOTTOM_ITEMS: NavItem[] = [
+  { to: "/settings", label: "Help", icon: HelpCircle },
+  { to: "/settings", label: "Profile", icon: User },
+];
+
+const MOBILE_PRIMARY: NavItem[] = [
   { to: "/inbox", label: "Inbox", icon: Inbox, badge: 4 },
   { to: "/channels", label: "Channels", icon: Radio },
   { to: "/customers", label: "People", icon: Users },
   { to: "/", label: "Home", icon: LayoutDashboard, exact: true },
-  { to: "/settings", label: "More", icon: Settings },
+];
+
+const MOBILE_MORE: NavItem[] = [
+  { to: "/members", label: "Members", icon: UserCog },
+  { to: "/settings", label: "Settings", icon: Settings },
+  { to: "/audit", label: "Audit log", icon: FileCheck2, badge: 2 },
+  { to: "/states", label: "States", icon: AlertCircle },
+  { to: "/settings", label: "Help", icon: HelpCircle },
+  { to: "/settings", label: "Profile", icon: User },
 ];
 
 const STORAGE_KEY = "app.sidebar.collapsed";
@@ -63,9 +105,11 @@ const roleTone: Record<WorkspaceRole, string> = {
   Viewer: "bg-muted text-muted-foreground",
 };
 
+/* ───────────────────────── AppShell ───────────────────────── */
+
 export function AppShell({
   children,
-  // Accepted for backwards-compat with existing routes; behavior is now unified.
+  // Accepted for backwards-compat with existing routes; behavior is unified.
   variant: _variant,
 }: {
   children?: React.ReactNode;
@@ -73,17 +117,14 @@ export function AppShell({
 }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
-  // Single persisted collapse state shared across every page.
   const [collapsed, setCollapsed] = useState<boolean>(() => {
     if (typeof window === "undefined") return false;
     const stored = window.localStorage.getItem(STORAGE_KEY);
     if (stored === "1") return true;
     if (stored === "0") return false;
-    // No stored preference — auto-collapse on tablet, expanded on desktop.
     return window.matchMedia("(max-width: 1279px)").matches;
   });
 
-  // Auto-adjust on viewport changes only when the user has not set a preference.
   useEffect(() => {
     const stored =
       typeof window !== "undefined"
@@ -105,6 +146,8 @@ export function AppShell({
       return next;
     });
   };
+
+  const [moreOpen, setMoreOpen] = useState(false);
 
   const isActive = (to: string, exact?: boolean) =>
     exact ? pathname === to : pathname === to || pathname.startsWith(to + "/");
@@ -169,14 +212,14 @@ export function AppShell({
           </main>
         </div>
 
-        {/* Mobile bottom nav — floating pill */}
+        {/* Mobile bottom nav */}
         <nav className="fixed inset-x-3 bottom-3 z-30 flex items-center justify-between gap-1 rounded-2xl border border-border bg-surface/95 p-1.5 shadow-pop backdrop-blur md:hidden">
-          {mobileNav.map((item) => {
+          {MOBILE_PRIMARY.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.to, item.exact);
             return (
               <Link
-                key={item.to}
+                key={item.label}
                 to={item.to as "/"}
                 className={`relative flex flex-1 flex-col items-center justify-center gap-0.5 rounded-xl py-1.5 text-[10px] font-medium transition ${
                   active
@@ -194,7 +237,57 @@ export function AppShell({
               </Link>
             );
           })}
+          <button
+            onClick={() => setMoreOpen(true)}
+            className="relative flex flex-1 flex-col items-center justify-center gap-0.5 rounded-xl py-1.5 text-[10px] font-medium text-muted-foreground transition hover:bg-secondary"
+          >
+            <MoreHorizontal className="h-[18px] w-[18px]" />
+            More
+          </button>
         </nav>
+
+        {/* Mobile "More" sheet */}
+        {moreOpen && (
+          <div className="fixed inset-0 z-40 md:hidden">
+            <div
+              className="absolute inset-0 bg-foreground/40 animate-fade-in"
+              onClick={() => setMoreOpen(false)}
+            />
+            <div className="absolute inset-x-0 bottom-0 rounded-t-3xl border-t border-border bg-surface p-4 shadow-pop animate-slide-in-right">
+              <div className="mb-3 flex items-center justify-between">
+                <div className="text-sm font-semibold">More</div>
+                <button
+                  onClick={() => setMoreOpen(false)}
+                  className="grid h-8 w-8 place-items-center rounded-lg border border-border text-muted-foreground"
+                  aria-label="Close"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+              <div className="grid grid-cols-3 gap-2 pb-6">
+                {MOBILE_MORE.map((it) => {
+                  const Icon = it.icon;
+                  return (
+                    <Link
+                      key={it.label}
+                      to={it.to as "/"}
+                      onClick={() => setMoreOpen(false)}
+                      className="relative flex flex-col items-center gap-1.5 rounded-xl border border-border bg-card px-2 py-3 text-[11px] font-medium text-foreground transition hover:bg-secondary"
+                    >
+                      <Icon className="h-4 w-4 text-muted-foreground" />
+                      {it.label}
+                      {it.badge ? (
+                        <span className="absolute right-2 top-2 grid h-4 min-w-[16px] place-items-center rounded-full bg-primary px-1 text-[9px] font-bold text-primary-foreground">
+                          {it.badge}
+                        </span>
+                      ) : null}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </TooltipProvider>
   );
@@ -216,8 +309,8 @@ function UnifiedSidebar({
   return (
     <aside
       data-collapsed={collapsed}
-      className={`hidden md:flex shrink-0 flex-col border-r border-sidebar-border bg-sidebar/95 backdrop-blur transition-[width] duration-200 ease-out ${
-        collapsed ? "w-16" : "w-[248px]"
+      className={`hidden md:flex shrink-0 flex-col border-r border-sidebar-border bg-sidebar/95 backdrop-blur transition-[width] duration-300 ease-in-out overflow-hidden ${
+        collapsed ? "w-16" : "w-[240px]"
       }`}
     >
       {/* Workspace area */}
@@ -246,7 +339,7 @@ function UnifiedSidebar({
               {ws.initials}
               <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-success ring-2 ring-surface" />
             </div>
-            <div className="min-w-0 flex-1">
+            <div className="min-w-0 flex-1 transition-opacity duration-200">
               <div className="truncate text-[13px] font-semibold leading-tight">
                 {ws.name}
               </div>
@@ -266,27 +359,33 @@ function UnifiedSidebar({
 
       <div className="mx-3 h-px bg-sidebar-border" />
 
-      {/* Section label */}
-      {!collapsed && (
-        <div className="px-4 pb-1.5 pt-3 text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground/70">
-          Workspace
-        </div>
-      )}
-
-      {/* Nav */}
-      <nav className={`mt-2 px-2 space-y-0.5 ${collapsed ? "flex flex-col items-center" : ""}`}>
-        {navItems.map((item) => (
-          <NavRow
-            key={item.to}
-            item={item}
-            collapsed={collapsed}
-            active={isActive(item.to, item.exact)}
-          />
+      {/* Sections */}
+      <div className="flex-1 overflow-y-auto py-2">
+        {NAV_SECTIONS.map((section, idx) => (
+          <div key={section.id} className={idx > 0 ? "mt-3" : ""}>
+            {!collapsed ? (
+              <div className="px-4 pb-1.5 pt-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground/70">
+                {section.title}
+              </div>
+            ) : idx > 0 ? (
+              <div className="mx-3 my-2 h-px bg-sidebar-border/60" />
+            ) : null}
+            <nav className={`px-2 space-y-0.5 ${collapsed ? "flex flex-col items-center" : ""}`}>
+              {section.items.map((item) => (
+                <NavRow
+                  key={item.to + item.label}
+                  item={item}
+                  collapsed={collapsed}
+                  active={isActive(item.to, item.exact)}
+                />
+              ))}
+            </nav>
+          </div>
         ))}
-      </nav>
+      </div>
 
       {/* Bottom area */}
-      <div className={`mt-auto ${collapsed ? "flex flex-col items-center gap-1.5 pb-3" : "p-3 space-y-2"}`}>
+      <div className={`mt-auto border-t border-sidebar-border ${collapsed ? "flex flex-col items-center gap-1.5 py-3" : "p-3 space-y-2"}`}>
         {!collapsed && (
           <div className="overflow-hidden rounded-xl border border-sidebar-border bg-gradient-to-br from-primary-soft via-surface to-surface p-3 shadow-soft">
             <div className="flex items-center gap-1.5 text-[11px] font-semibold text-primary">
@@ -299,44 +398,49 @@ function UnifiedSidebar({
           </div>
         )}
 
-        <div
-          className={`flex ${collapsed ? "flex-col items-center gap-1" : "items-center gap-1 rounded-lg border border-sidebar-border bg-surface p-1"}`}
-        >
-          {collapsed ? (
-            <>
-              <BottomIcon icon={HelpCircle} label="Help" />
-              <BottomIcon icon={Sparkles} label="Human-in-the-loop AI" />
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    onClick={onToggle}
-                    aria-label="Expand sidebar"
-                    className="grid h-9 w-9 place-items-center rounded-lg text-muted-foreground transition hover:bg-sidebar-accent hover:text-foreground"
-                  >
-                    <PanelLeftOpen className="h-[16px] w-[16px]" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent side="right" className="text-xs">
-                  Expand sidebar
-                </TooltipContent>
-              </Tooltip>
-            </>
-          ) : (
-            <>
-              <button className="flex flex-1 items-center gap-2 rounded-md px-2 py-1.5 text-[12px] font-medium text-muted-foreground transition hover:bg-secondary hover:text-foreground">
-                <HelpCircle className="h-3.5 w-3.5" />
-                Help
-              </button>
-              <button
-                onClick={onToggle}
-                aria-label="Collapse sidebar"
-                className="grid h-7 w-7 place-items-center rounded-md text-muted-foreground transition hover:bg-secondary hover:text-foreground"
-              >
-                <PanelLeftClose className="h-3.5 w-3.5" />
-              </button>
-            </>
-          )}
-        </div>
+        {collapsed ? (
+          <>
+            {BOTTOM_ITEMS.map((it) => (
+              <BottomIcon key={it.label} icon={it.icon} label={it.label} />
+            ))}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={onToggle}
+                  aria-label="Expand sidebar"
+                  className="grid h-9 w-9 place-items-center rounded-lg text-muted-foreground transition hover:bg-sidebar-accent hover:text-foreground"
+                >
+                  <PanelLeftOpen className="h-[16px] w-[16px]" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right" className="text-xs">
+                Expand sidebar
+              </TooltipContent>
+            </Tooltip>
+          </>
+        ) : (
+          <div className="flex items-center gap-1 rounded-lg border border-sidebar-border bg-surface p-1">
+            {BOTTOM_ITEMS.map((it) => {
+              const Icon = it.icon;
+              return (
+                <button
+                  key={it.label}
+                  className="flex flex-1 items-center justify-center gap-1.5 rounded-md px-2 py-1.5 text-[12px] font-medium text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+                >
+                  <Icon className="h-3.5 w-3.5" />
+                  {it.label}
+                </button>
+              );
+            })}
+            <button
+              onClick={onToggle}
+              aria-label="Collapse sidebar"
+              className="grid h-7 w-7 place-items-center rounded-md text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+            >
+              <PanelLeftClose className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        )}
       </div>
     </aside>
   );
@@ -389,7 +493,7 @@ function NavRow({
     <Link
       to={item.to as "/"}
       className={[
-        "group relative flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[13px] font-medium transition",
+        "group relative flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[13px] font-medium transition-colors duration-200",
         active
           ? "bg-sidebar-accent text-sidebar-accent-foreground"
           : "text-sidebar-foreground/85 hover:bg-sidebar-accent/70 hover:text-sidebar-accent-foreground",
@@ -400,11 +504,11 @@ function NavRow({
       )}
       <Icon
         className={[
-          "h-[15px] w-[15px] transition",
+          "h-[15px] w-[15px] transition-colors",
           active ? "text-primary" : "text-muted-foreground group-hover:text-foreground",
         ].join(" ")}
       />
-      <span className="flex-1">{item.label}</span>
+      <span className="flex-1 truncate">{item.label}</span>
       {item.badge ? (
         <span
           className={`rounded-md px-1.5 py-0.5 text-[10px] font-semibold tabular-nums ${
