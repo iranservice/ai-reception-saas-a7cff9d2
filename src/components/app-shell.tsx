@@ -33,6 +33,7 @@ import {
 /* ───────────────────────── Single shared menu config ───────────────────────── */
 
 type NavItem = {
+  id: string;
   to: string;
   label: string;
   icon: typeof LayoutDashboard;
@@ -46,54 +47,50 @@ type NavSection = {
   items: NavItem[];
 };
 
-const NAV_SECTIONS: NavSection[] = [
-  {
-    id: "workspace",
-    title: "Workspace",
-    items: [
-      { to: "/", label: "Dashboard", icon: LayoutDashboard, exact: true },
-      { to: "/inbox", label: "Inbox", icon: Inbox, badge: 4 },
-      { to: "/channels", label: "Channels", icon: Radio, badge: 8 },
-      { to: "/customers", label: "Customers", icon: Users },
-    ],
-  },
-  {
-    id: "management",
-    title: "Management",
-    items: [
-      { to: "/members", label: "Members", icon: UserCog },
-      { to: "/settings", label: "Settings", icon: Settings },
-    ],
-  },
-  {
-    id: "trust",
-    title: "Trust & System",
-    items: [
-      { to: "/audit", label: "Audit log", icon: FileCheck2, badge: 2 },
-      { to: "/states", label: "States", icon: AlertCircle },
-    ],
-  },
-];
+const MENU_CONFIG: { sections: NavSection[]; bottomItems: NavItem[] } = {
+  sections: [
+    {
+      id: "workspace",
+      title: "Workspace",
+      items: [
+        { id: "dashboard", to: "/", label: "Dashboard", icon: LayoutDashboard, exact: true },
+        { id: "inbox", to: "/inbox", label: "Inbox", icon: Inbox, badge: 4 },
+        { id: "channels", to: "/channels", label: "Channels", icon: Radio, badge: 8 },
+        { id: "customers", to: "/customers", label: "Customers", icon: Users },
+      ],
+    },
+    {
+      id: "management",
+      title: "Management",
+      items: [
+        { id: "members", to: "/members", label: "Members", icon: UserCog },
+        { id: "settings", to: "/settings", label: "Settings", icon: Settings },
+      ],
+    },
+    {
+      id: "trust",
+      title: "Trust & System",
+      items: [
+        { id: "audit", to: "/audit", label: "Audit log", icon: FileCheck2, badge: 2 },
+        { id: "states", to: "/states", label: "States", icon: AlertCircle },
+      ],
+    },
+  ],
+  bottomItems: [
+    { id: "help", to: "/settings", label: "Help", icon: HelpCircle },
+    { id: "profile", to: "/settings", label: "Profile", icon: User },
+  ],
+};
 
-const BOTTOM_ITEMS: NavItem[] = [
-  { to: "/settings", label: "Help", icon: HelpCircle },
-  { to: "/settings", label: "Profile", icon: User },
-];
-
-const MOBILE_PRIMARY: NavItem[] = [
-  { to: "/inbox", label: "Inbox", icon: Inbox, badge: 4 },
-  { to: "/channels", label: "Channels", icon: Radio },
-  { to: "/customers", label: "People", icon: Users },
-  { to: "/", label: "Home", icon: LayoutDashboard, exact: true },
-];
-
-const MOBILE_MORE: NavItem[] = [
-  { to: "/members", label: "Members", icon: UserCog },
-  { to: "/settings", label: "Settings", icon: Settings },
-  { to: "/audit", label: "Audit log", icon: FileCheck2, badge: 2 },
-  { to: "/states", label: "States", icon: AlertCircle },
-  { to: "/settings", label: "Help", icon: HelpCircle },
-  { to: "/settings", label: "Profile", icon: User },
+const allMenuItems = () => MENU_CONFIG.sections.flatMap((section) => section.items);
+const menuItem = (id: string) => allMenuItems().find((item) => item.id === id)!;
+const mobilePrimaryItems = () => ["inbox", "channels", "customers", "dashboard"].map(menuItem);
+const mobileMoreItems = () => [
+  menuItem("members"),
+  menuItem("settings"),
+  menuItem("audit"),
+  menuItem("states"),
+  ...MENU_CONFIG.bottomItems,
 ];
 
 const STORAGE_KEY = "app.sidebar.collapsed";
@@ -109,13 +106,12 @@ const roleTone: Record<WorkspaceRole, string> = {
 
 export function AppShell({
   children,
-  // Accepted for backwards-compat with existing routes; behavior is unified.
-  variant: _variant,
 }: {
   children?: React.ReactNode;
-  variant?: "default" | "rail";
 }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const mobilePrimary = mobilePrimaryItems();
+  const mobileMore = mobileMoreItems();
 
   const [collapsed, setCollapsed] = useState<boolean>(() => {
     if (typeof window === "undefined") return false;
@@ -155,14 +151,13 @@ export function AppShell({
   return (
     <TooltipProvider delayDuration={150}>
       <div className="min-h-screen flex w-full bg-app text-foreground">
-        <UnifiedSidebar
+        <SharedSidebar
           collapsed={collapsed}
-          onToggle={toggle}
           isActive={isActive}
         />
 
         {/* Main */}
-        <div className="flex-1 flex min-w-0 flex-col">
+        <div data-sidebar-collapsed={collapsed} className="flex-1 flex min-w-0 flex-col transition-[width] duration-300 ease-in-out">
           <header className="sticky top-0 z-20 flex h-14 items-center gap-3 border-b border-border bg-background/75 px-4 backdrop-blur-md lg:px-6">
             <button
               onClick={toggle}
@@ -214,12 +209,12 @@ export function AppShell({
 
         {/* Mobile bottom nav */}
         <nav className="fixed inset-x-3 bottom-3 z-30 flex items-center justify-between gap-1 rounded-2xl border border-border bg-surface/95 p-1.5 shadow-pop backdrop-blur md:hidden">
-          {MOBILE_PRIMARY.map((item) => {
+          {mobilePrimary.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.to, item.exact);
             return (
               <Link
-                key={item.label}
+                key={item.id}
                 to={item.to as "/"}
                 className={`relative flex flex-1 flex-col items-center justify-center gap-0.5 rounded-xl py-1.5 text-[10px] font-medium transition ${
                   active
@@ -228,7 +223,7 @@ export function AppShell({
                 }`}
               >
                 <Icon className="h-[18px] w-[18px]" />
-                {item.label}
+                {item.id === "dashboard" ? "Home" : item.id === "customers" ? "People" : item.label}
                 {item.badge ? (
                   <span className="absolute right-2 top-1 grid h-4 min-w-[16px] place-items-center rounded-full bg-primary px-1 text-[9px] font-bold text-primary-foreground ring-2 ring-surface">
                     {item.badge}
@@ -265,11 +260,11 @@ export function AppShell({
                 </button>
               </div>
               <div className="grid grid-cols-3 gap-2 pb-6">
-                {MOBILE_MORE.map((it) => {
+                {mobileMore.map((it) => {
                   const Icon = it.icon;
                   return (
                     <Link
-                      key={it.label}
+                      key={it.id}
                       to={it.to as "/"}
                       onClick={() => setMoreOpen(false)}
                       className="relative flex flex-col items-center gap-1.5 rounded-xl border border-border bg-card px-2 py-3 text-[11px] font-medium text-foreground transition hover:bg-secondary"
@@ -295,13 +290,11 @@ export function AppShell({
 
 /* ───────────────────────── Unified sidebar ───────────────────────── */
 
-function UnifiedSidebar({
+function SharedSidebar({
   collapsed,
-  onToggle,
   isActive,
 }: {
   collapsed: boolean;
-  onToggle: () => void;
   isActive: (to: string, exact?: boolean) => boolean;
 }) {
   const ws = workspaces[0];
@@ -361,7 +354,7 @@ function UnifiedSidebar({
 
       {/* Sections */}
       <div className="flex-1 overflow-y-auto py-2">
-        {NAV_SECTIONS.map((section, idx) => (
+        {MENU_CONFIG.sections.map((section, idx) => (
           <div key={section.id} className={idx > 0 ? "mt-3" : ""}>
             {!collapsed ? (
               <div className="px-4 pb-1.5 pt-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground/70">
@@ -400,31 +393,17 @@ function UnifiedSidebar({
 
         {collapsed ? (
           <>
-            {BOTTOM_ITEMS.map((it) => (
-              <BottomIcon key={it.label} icon={it.icon} label={it.label} />
+            {MENU_CONFIG.bottomItems.map((it) => (
+              <BottomIcon key={it.id} icon={it.icon} label={it.label} />
             ))}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={onToggle}
-                  aria-label="Expand sidebar"
-                  className="grid h-9 w-9 place-items-center rounded-lg text-muted-foreground transition hover:bg-sidebar-accent hover:text-foreground"
-                >
-                  <PanelLeftOpen className="h-[16px] w-[16px]" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="right" className="text-xs">
-                Expand sidebar
-              </TooltipContent>
-            </Tooltip>
           </>
         ) : (
           <div className="flex items-center gap-1 rounded-lg border border-sidebar-border bg-surface p-1">
-            {BOTTOM_ITEMS.map((it) => {
+            {MENU_CONFIG.bottomItems.map((it) => {
               const Icon = it.icon;
               return (
                 <button
-                  key={it.label}
+                  key={it.id}
                   className="flex flex-1 items-center justify-center gap-1.5 rounded-md px-2 py-1.5 text-[12px] font-medium text-muted-foreground transition hover:bg-secondary hover:text-foreground"
                 >
                   <Icon className="h-3.5 w-3.5" />
@@ -432,13 +411,6 @@ function UnifiedSidebar({
                 </button>
               );
             })}
-            <button
-              onClick={onToggle}
-              aria-label="Collapse sidebar"
-              className="grid h-7 w-7 place-items-center rounded-md text-muted-foreground transition hover:bg-secondary hover:text-foreground"
-            >
-              <PanelLeftClose className="h-3.5 w-3.5" />
-            </button>
           </div>
         )}
       </div>
