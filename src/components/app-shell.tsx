@@ -387,7 +387,7 @@ function AppSidebar({
               <BottomIcon key={it.label} icon={it.icon} label={it.label} />
             ))
           ) : (
-            {BOTTOM_ITEMS.map((it) => {
+            BOTTOM_ITEMS.map((it) => {
               const Icon = it.icon;
               return (
                 <button
@@ -398,7 +398,7 @@ function AppSidebar({
                   {it.label}
                 </button>
               );
-            })}
+            })
           )}
           <SidebarCollapseButton collapsed={collapsed} onToggle={onToggle} />
         </div>
