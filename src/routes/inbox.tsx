@@ -436,155 +436,187 @@ function InboxPage() {
           </div>
         </div>
 
-        {/* Column 3: Customer context */}
+        {/* Column 3: Customer context — desktop xl */}
         <aside className="hidden min-h-0 flex-col overflow-y-auto border-l border-border bg-surface xl:flex">
-          {/* Profile */}
-          <div className="border-b border-border p-5">
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <Avatar initials={customer.initials} tone="primary" />
-                <div className="min-w-0">
-                  <h3 className="truncate text-sm font-semibold">{customer.name}</h3>
-                  <p className="truncate text-xs text-muted-foreground">
-                    Customer · {customer.conversations} conversations
-                  </p>
-                </div>
-              </div>
-              <button className="grid h-7 w-7 place-items-center rounded-md text-muted-foreground hover:bg-secondary">
-                <ExternalLink className="h-3.5 w-3.5" />
-              </button>
-            </div>
-            <div className="mt-3 grid grid-cols-1 gap-1.5">
-              <ContactRow icon={Mail} value={customer.email} />
-              <ContactRow icon={Phone} value={`${customer.phone} · placeholder`} />
-            </div>
-            <div className="mt-3 flex flex-wrap gap-1">
-              {customer.tags.map((t) => (
-                <span
-                  key={t}
-                  className="rounded-md border border-border bg-surface-muted px-1.5 py-0.5 text-[11px] font-medium"
-                >
-                  {t}
-                </span>
-              ))}
-              <button className="rounded-md border border-dashed border-border px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground hover:bg-secondary">
-                + Tag
-              </button>
-            </div>
-          </div>
-
-          {/* Visibility warning */}
-          <div className="mx-5 mt-4 flex items-start gap-2 rounded-lg border border-warning/30 bg-warning/10 p-3 text-[11px] text-warning-foreground">
-            <Shield className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-            <div>
-              <div className="font-semibold">Workspace-scoped</div>
-              Customer data is visible only to members of this workspace. Mock data — no
-              real PII shown.
-            </div>
-          </div>
-
-          {/* Next actions */}
-          <div className="p-5">
-            <SectionTitle>Next action suggestions</SectionTitle>
-            <ul className="mt-3 space-y-2">
-              <NextAction
-                label="Confirm Wed 10:30am slot"
-                hint="Based on customer's morning preference"
-              />
-              <NextAction
-                label="Send first-visit forms"
-                hint="Eleanor hasn't returned them"
-              />
-              <NextAction label="Mark as resolved" hint="If reply is acknowledged" />
-            </ul>
-          </div>
-
-          {/* Linked conversations */}
-          <div className="border-t border-border p-5">
-            <SectionTitle>Linked conversations</SectionTitle>
-            <ul className="mt-3 space-y-2">
-              {linked.length === 0 && (
-                <li className="text-[11px] text-muted-foreground">
-                  No other conversations from this customer.
-                </li>
-              )}
-              {linked.map((c) => (
-                <li key={c.id}>
-                  <button
-                    onClick={() => openConversation(c.id)}
-                    className="flex w-full items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-left hover:bg-surface-muted"
-                  >
-                    <div className="min-w-0 flex-1">
-                      <div className="truncate text-xs font-semibold">{c.subject}</div>
-                      <div className="truncate text-[11px] text-muted-foreground">
-                        {c.updated} · {channelLabel[c.channel]}
-                      </div>
-                    </div>
-                    <InboxStatusChip status={c.inboxStatus} />
-                    <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Internal notes summary */}
-          <div className="border-t border-border p-5">
-            <SectionTitle>Internal notes</SectionTitle>
-            <ul className="mt-3 space-y-2">
-              {active.messages
-                .filter((m) => m.author === "internal-note")
-                .map((n) => (
-                  <li
-                    key={n.id}
-                    className="rounded-lg border border-warning/30 bg-warning/10 p-3 text-xs text-warning-foreground"
-                  >
-                    <div className="mb-1 flex items-center justify-between text-[11px]">
-                      <span className="font-semibold">{n.authorName}</span>
-                      <span className="opacity-70">{n.time}</span>
-                    </div>
-                    <p className="leading-snug">{n.body}</p>
-                  </li>
-                ))}
-              {active.messages.filter((m) => m.author === "internal-note").length === 0 && (
-                <li className="text-[11px] text-muted-foreground">
-                  No internal notes yet.
-                </li>
-              )}
-            </ul>
-          </div>
-
-          {/* Audit summary */}
-          <div className="border-t border-border p-5">
-            <SectionTitle>Audit summary</SectionTitle>
-            <ul className="mt-3 space-y-3 text-[11px]">
-              {active.messages
-                .filter((m) =>
-                  m.author === "system-assignment" ||
-                  m.author === "system-status" ||
-                  m.author === "system-classification" ||
-                  m.author === "operator",
-                )
-                .map((m) => (
-                  <li key={m.id} className="flex items-start gap-2">
-                    <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-muted-foreground/50" />
-                    <div className="min-w-0">
-                      <div className="font-medium text-foreground">
-                        {systemLabel(m)}
-                      </div>
-                      <div className="text-muted-foreground">{m.time}</div>
-                    </div>
-                  </li>
-                ))}
-            </ul>
-            <button className="mt-3 inline-flex items-center gap-1 text-[11px] font-medium text-primary hover:underline">
-              View full audit log
-              <ArrowRight className="h-3 w-3" />
-            </button>
-          </div>
+          <CustomerContext
+            customer={customer}
+            active={active}
+            linked={linked}
+            onOpenConversation={openConversation}
+          />
         </aside>
       </div>
+
+      {/* Customer context drawer for mobile + tablet */}
+      <Sheet open={contextOpen} onOpenChange={setContextOpen}>
+        <SheetContent
+          side="right"
+          className="w-full max-w-md overflow-y-auto p-0 sm:max-w-md xl:hidden"
+        >
+          <SheetTitle className="sr-only">Customer context</SheetTitle>
+          <CustomerContext
+            customer={customer}
+            active={active}
+            linked={linked}
+            onOpenConversation={(id) => {
+              openConversation(id);
+              setContextOpen(false);
+            }}
+          />
+        </SheetContent>
+      </Sheet>
     </AppShell>
+  );
+}
+
+function CustomerContext({
+  customer,
+  active,
+  linked,
+  onOpenConversation,
+}: {
+  customer: ReturnType<typeof customers.find> extends infer T ? NonNullable<T> : never;
+  active: (typeof conversations)[number];
+  linked: (typeof conversations)[number][];
+  onOpenConversation: (id: string) => void;
+}) {
+  return (
+    <>
+      {/* Profile */}
+      <div className="border-b border-border p-5">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <Avatar initials={customer.initials} tone="primary" />
+            <div className="min-w-0">
+              <h3 className="truncate text-sm font-semibold">{customer.name}</h3>
+              <p className="truncate text-xs text-muted-foreground">
+                Customer · {customer.conversations} conversations
+              </p>
+            </div>
+          </div>
+          <button className="grid h-7 w-7 place-items-center rounded-md text-muted-foreground hover:bg-secondary">
+            <ExternalLink className="h-3.5 w-3.5" />
+          </button>
+        </div>
+        <div className="mt-3 grid grid-cols-1 gap-1.5">
+          <ContactRow icon={Mail} value={customer.email} />
+          <ContactRow icon={Phone} value={`${customer.phone} · placeholder`} />
+        </div>
+        <div className="mt-3 flex flex-wrap gap-1">
+          {customer.tags.map((t) => (
+            <span
+              key={t}
+              className="rounded-md border border-border bg-surface-muted px-1.5 py-0.5 text-[11px] font-medium"
+            >
+              {t}
+            </span>
+          ))}
+          <button className="rounded-md border border-dashed border-border px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground hover:bg-secondary">
+            + Tag
+          </button>
+        </div>
+      </div>
+
+      {/* Visibility warning */}
+      <div className="mx-5 mt-4 flex items-start gap-2 rounded-lg border border-warning/30 bg-warning/10 p-3 text-[11px] text-warning-foreground">
+        <Shield className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+        <div>
+          <div className="font-semibold">Workspace-scoped</div>
+          Customer data is visible only to members of this workspace. Mock data — no real PII shown.
+        </div>
+      </div>
+
+      {/* Next actions */}
+      <div className="p-5">
+        <SectionTitle>Next action suggestions</SectionTitle>
+        <ul className="mt-3 space-y-2">
+          <NextAction label="Confirm Wed 10:30am slot" hint="Based on customer's morning preference" />
+          <NextAction label="Send first-visit forms" hint="Eleanor hasn't returned them" />
+          <NextAction label="Mark as resolved" hint="If reply is acknowledged" />
+        </ul>
+      </div>
+
+      {/* Linked conversations */}
+      <div className="border-t border-border p-5">
+        <SectionTitle>Linked conversations</SectionTitle>
+        <ul className="mt-3 space-y-2">
+          {linked.length === 0 && (
+            <li className="text-[11px] text-muted-foreground">
+              No other conversations from this customer.
+            </li>
+          )}
+          {linked.map((c) => (
+            <li key={c.id}>
+              <button
+                onClick={() => onOpenConversation(c.id)}
+                className="flex w-full items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-left hover:bg-surface-muted"
+              >
+                <div className="min-w-0 flex-1">
+                  <div className="truncate text-xs font-semibold">{c.subject}</div>
+                  <div className="truncate text-[11px] text-muted-foreground">
+                    {c.updated} · {channelLabel[c.channel]}
+                  </div>
+                </div>
+                <InboxStatusChip status={c.inboxStatus} />
+                <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Internal notes */}
+      <div className="border-t border-border p-5">
+        <SectionTitle>Internal notes</SectionTitle>
+        <ul className="mt-3 space-y-2">
+          {active.messages
+            .filter((m) => m.author === "internal-note")
+            .map((n) => (
+              <li
+                key={n.id}
+                className="rounded-lg border border-warning/30 bg-warning/10 p-3 text-xs text-warning-foreground"
+              >
+                <div className="mb-1 flex items-center justify-between text-[11px]">
+                  <span className="font-semibold">{n.authorName}</span>
+                  <span className="opacity-70">{n.time}</span>
+                </div>
+                <p className="leading-snug">{n.body}</p>
+              </li>
+            ))}
+          {active.messages.filter((m) => m.author === "internal-note").length === 0 && (
+            <li className="text-[11px] text-muted-foreground">No internal notes yet.</li>
+          )}
+        </ul>
+      </div>
+
+      {/* Audit summary */}
+      <div className="border-t border-border p-5 pb-10">
+        <SectionTitle>Audit summary</SectionTitle>
+        <ul className="mt-3 space-y-3 text-[11px]">
+          {active.messages
+            .filter(
+              (m) =>
+                m.author === "system-assignment" ||
+                m.author === "system-status" ||
+                m.author === "system-classification" ||
+                m.author === "operator",
+            )
+            .map((m) => (
+              <li key={m.id} className="flex items-start gap-2">
+                <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-muted-foreground/50" />
+                <div className="min-w-0">
+                  <div className="font-medium text-foreground">{systemLabel(m)}</div>
+                  <div className="text-muted-foreground">{m.time}</div>
+                </div>
+              </li>
+            ))}
+        </ul>
+        <button className="mt-3 inline-flex items-center gap-1 text-[11px] font-medium text-primary hover:underline">
+          View full audit log
+          <ArrowRight className="h-3 w-3" />
+        </button>
+      </div>
+    </>
   );
 }
 
