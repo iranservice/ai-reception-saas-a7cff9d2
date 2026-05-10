@@ -114,13 +114,25 @@ export const customers: Customer[] = [
   { id: "c6", name: "Owen Fitzgerald", email: "owen.f@gmail.com", phone: "+353 87 555 0099", tags: [], lastSeen: "4 days ago", conversations: 1, initials: "OF" },
 ];
 
+export type ThreadKind =
+  | "customer"
+  | "operator"
+  | "ai-draft"
+  | "internal-note"
+  | "system-assignment"
+  | "system-status"
+  | "system-classification";
+
 export type Message = {
   id: string;
-  author: "customer" | "operator" | "ai-draft";
+  author: ThreadKind;
   authorName: string;
   body: string;
   time: string;
 };
+
+export type Priority = "low" | "normal" | "high" | "urgent";
+export type InboxStatus = "new" | "open" | "waiting" | "needs-followup" | "closed";
 
 export type Conversation = {
   id: string;
@@ -129,6 +141,9 @@ export type Conversation = {
   preview: string;
   channel: Channel;
   status: ConvStatus;
+  inboxStatus: InboxStatus;
+  priority: Priority;
+  classification?: string;
   assignee?: string;
   unread: boolean;
   updated: string;
