@@ -6,7 +6,7 @@ const chipStyles: Record<ChipStatus, string> = {
   open: "bg-success/12 text-success ring-success/25",
   waiting: "bg-warning/20 text-warning-foreground ring-warning/40",
   closed: "bg-secondary text-muted-foreground ring-border",
-  "needs-review": "bg-ai-soft text-[oklch(0.40_0.18_290)] ring-[oklch(0.55_0.20_295)]/25",
+  "needs-review": "bg-ai-soft text-ai ring-[oklch(0.55_0.20_295)]/30",
   "access-denied": "bg-destructive/12 text-destructive ring-destructive/30",
   future: "bg-surface-muted text-muted-foreground ring-border",
 };
