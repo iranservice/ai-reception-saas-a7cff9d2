@@ -156,22 +156,27 @@ function DashboardPage() {
         {stats.map((s) => {
           const Icon = s.icon;
           const Trend = s.delta?.dir === "up" ? TrendingUp : s.delta?.dir === "down" ? TrendingDown : null;
+          const tintClass =
+            s.tone === "warning" ? "card-tinted-warning" :
+            s.tone === "danger" ? "card-tinted-danger" :
+            s.tone === "primary" ? "card-tinted-primary" :
+            s.tone === "success" ? "card-tinted-primary" : "";
           return (
             <div
               key={s.label}
               style={{ ["--kpi-accent" as never]: toneAccent[s.tone] }}
-              className="kpi-accent group relative overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-card transition hover:shadow-elev hover:-translate-y-0.5"
+              className={`kpi-accent group relative overflow-hidden rounded-2xl border border-border/80 bg-card p-5 shadow-card transition hover:shadow-elev hover:-translate-y-0.5 ${tintClass}`}
             >
-              <div className="flex items-start justify-between gap-2">
-                <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+              <div className="relative flex items-start justify-between gap-2">
+                <span className="text-[10.5px] font-bold uppercase tracking-[0.10em] text-muted-foreground">
                   {s.label}
                 </span>
-                <div className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl ring-1 ring-inset ${toneStyles[s.tone]}`}>
+                <div className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl ring-1 ring-inset shadow-soft ${toneStyles[s.tone]}`}>
                   <Icon className="h-[18px] w-[18px]" />
                 </div>
               </div>
-              <div className="mt-4 flex items-end justify-between gap-2">
-                <div className="text-[34px] font-semibold leading-none tracking-tight tabular-nums">
+              <div className="relative mt-5 flex items-end justify-between gap-2">
+                <div className="text-[38px] font-semibold leading-none tracking-tight tabular-nums">
                   {s.value}
                 </div>
                 {s.delta && (
@@ -181,7 +186,7 @@ function DashboardPage() {
                   </span>
                 )}
               </div>
-              <div className="mt-2 text-[12px] leading-snug text-muted-foreground">{s.hint}</div>
+              <div className="relative mt-2 text-[12px] leading-snug text-muted-foreground">{s.hint}</div>
             </div>
           );
         })}
