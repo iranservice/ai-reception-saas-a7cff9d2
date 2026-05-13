@@ -3,12 +3,12 @@ import { Info } from "lucide-react";
 
 const chipStyles: Record<ChipStatus, string> = {
   new: "bg-info/12 text-info ring-info/30",
-  open: "bg-info/12 text-info ring-info/25",
-  waiting: "bg-warning/15 text-warning-foreground ring-warning/30",
+  open: "bg-success/12 text-success ring-success/25",
+  waiting: "bg-warning/20 text-warning-foreground ring-warning/40",
   closed: "bg-secondary text-muted-foreground ring-border",
-  "needs-review": "bg-ai/12 text-ai ring-ai/30",
+  "needs-review": "bg-ai-soft text-ai ring-[oklch(0.55_0.20_295)]/30",
   "access-denied": "bg-destructive/12 text-destructive ring-destructive/30",
-  future: "bg-secondary text-muted-foreground/80 ring-border",
+  future: "bg-surface-muted text-muted-foreground ring-border",
 };
 
 const chipLabel: Record<ChipStatus, string> = {
@@ -33,7 +33,7 @@ export function StatusChip({ status }: { status: ChipStatus | ConvStatus }) {
     <span
       className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-semibold ring-1 ring-inset ${chipStyles[key]}`}
     >
-      <span className="h-1.5 w-1.5 rounded-full bg-current" />
+      <span className="h-1.5 w-1.5 rounded-full bg-current dot-glow" />
       {chipLabel[key]}
     </span>
   );
@@ -42,7 +42,7 @@ export function StatusChip({ status }: { status: ChipStatus | ConvStatus }) {
 const channelTone: Record<Channel, string> = {
   email: "bg-primary-soft text-primary ring-primary/20",
   webform: "bg-info/12 text-info ring-info/25",
-  sms: "bg-warning/15 text-warning-foreground ring-warning/30",
+  sms: "bg-warning/20 text-warning-foreground ring-warning/35",
   whatsapp: "bg-success/12 text-success ring-success/25",
   voice: "bg-secondary text-secondary-foreground ring-border",
 };

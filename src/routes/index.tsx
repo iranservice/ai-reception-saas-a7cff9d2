@@ -49,48 +49,42 @@ export const Route = createFileRoute("/")({
   component: DashboardPage,
 });
 
-type Tone = "info" | "warning" | "attention" | "ai" | "danger" | "success" | "neutral";
-
 type Stat = {
   label: string;
   value: string;
   hint: string;
   icon: typeof Inbox;
-  tone: Tone;
+  tone: "neutral" | "primary" | "warning" | "danger" | "success";
   delta?: { value: string; dir: "up" | "down" | "flat" };
 };
 
 const stats: Stat[] = [
-  { label: "Open conversations", value: "12", hint: "Across email & web chat", icon: Inbox, tone: "info", delta: { value: "+3", dir: "up" } },
+  { label: "Open conversations", value: "12", hint: "Across email & web chat", icon: Inbox, tone: "neutral", delta: { value: "+3", dir: "up" } },
   { label: "Waiting for operator", value: "4", hint: "Median wait 18m", icon: Timer, tone: "warning", delta: { value: "-1", dir: "down" } },
-  { label: "Needs follow-up", value: "6", hint: "Older than 24h", icon: Repeat2, tone: "attention", delta: { value: "+2", dir: "up" } },
-  { label: "Drafts pending review", value: "7", hint: "Human review required", icon: Sparkles, tone: "ai", delta: { value: "+4", dir: "up" } },
+  { label: "Needs follow-up", value: "6", hint: "Older than 24h", icon: Repeat2, tone: "neutral", delta: { value: "+2", dir: "up" } },
+  { label: "Drafts pending review", value: "7", hint: "Human review required", icon: Sparkles, tone: "primary", delta: { value: "+4", dir: "up" } },
   { label: "Access alerts", value: "1", hint: "Blocked Viewer export", icon: ShieldAlert, tone: "danger", delta: { value: "0", dir: "flat" } },
 ];
 
-const toneStyles: Record<Tone, string> = {
+const toneStyles: Record<Stat["tone"], string> = {
   neutral: "bg-secondary text-secondary-foreground ring-border",
-  info: "bg-info/12 text-info ring-info/25",
+  primary: "bg-primary-soft text-primary ring-primary/25",
   warning: "bg-warning/15 text-warning-foreground ring-warning/30",
-  attention: "bg-attention/12 text-attention ring-attention/25",
-  ai: "bg-ai/12 text-ai ring-ai/25",
   danger: "bg-destructive/10 text-destructive ring-destructive/25",
   success: "bg-success/10 text-success ring-success/25",
 };
 
-const toneAccent: Record<Tone, string> = {
+const toneAccent: Record<Stat["tone"], string> = {
   neutral: "var(--color-border-strong)",
-  info: "var(--color-info)",
+  primary: "var(--color-primary)",
   warning: "var(--color-warning)",
-  attention: "var(--color-attention)",
-  ai: "var(--color-ai)",
   danger: "var(--color-destructive)",
   success: "var(--color-success)",
 };
 
 const deltaStyles = {
   up: "text-success bg-success/10 ring-1 ring-inset ring-success/20",
-  down: "text-attention bg-attention/10 ring-1 ring-inset ring-attention/25",
+  down: "text-warning-foreground bg-warning/15 ring-1 ring-inset ring-warning/25",
   flat: "text-muted-foreground bg-secondary ring-1 ring-inset ring-border",
 };
 
@@ -366,7 +360,7 @@ function DashboardPage() {
         <div className="lg:col-span-5 rounded-xl border border-border bg-card shadow-card">
           <div className="flex items-center justify-between border-b border-border px-5 py-3.5">
             <div className="flex items-center gap-2">
-              <div className="grid h-7 w-7 place-items-center rounded-lg bg-ai/12 text-ai ring-1 ring-ai/25">
+              <div className="grid h-7 w-7 place-items-center rounded-lg bg-primary-soft text-primary ring-1 ring-primary/20">
                 <Sparkles className="h-3.5 w-3.5" />
               </div>
               <div>
@@ -374,7 +368,7 @@ function DashboardPage() {
                 <p className="text-[11px] text-muted-foreground">Operator sends every reply.</p>
               </div>
             </div>
-            <span className="rounded-md border border-ai/25 bg-ai/10 px-1.5 py-0.5 text-[10px] font-semibold text-ai uppercase tracking-wider">
+            <span className="rounded-md border border-primary/20 bg-primary-soft px-1.5 py-0.5 text-[10px] font-semibold text-primary uppercase tracking-wider">
               Human review
             </span>
           </div>
@@ -389,14 +383,14 @@ function DashboardPage() {
                       <span className="text-[10.5px] text-muted-foreground tabular-nums shrink-0">{d.prepared}</span>
                     </div>
                     <div className="text-[11.5px] text-muted-foreground truncate">{d.subject}</div>
-                    <div className="mt-1.5 rounded-lg border border-dashed border-ai/25 bg-ai/[0.06] p-2.5 text-[12px] leading-snug text-foreground/90 line-clamp-2">
+                    <div className="mt-1.5 rounded-lg border border-dashed border-primary/25 bg-primary-soft/40 p-2.5 text-[12px] leading-snug text-foreground/90 line-clamp-2">
                       {d.draft}
                     </div>
                     <div className="mt-1.5 flex items-center justify-between text-[10.5px]">
                       <span className="text-muted-foreground">
                         Confidence: <span className="font-semibold text-foreground/80">{d.confidence}</span>
                       </span>
-                      <Link to="/inbox" className="font-semibold text-ai hover:underline inline-flex items-center gap-1">
+                      <Link to="/inbox" className="font-semibold text-primary hover:underline inline-flex items-center gap-1">
                         Review & send <ArrowUpRight className="h-3 w-3" />
                       </Link>
                     </div>
@@ -407,6 +401,8 @@ function DashboardPage() {
           </ul>
         </div>
       </section>
+
+      {/* Operator workload + Audit + Planned */}
       <section className="grid grid-cols-1 gap-5 lg:grid-cols-12">
         <div className="lg:col-span-5 rounded-xl border border-border bg-card shadow-card">
           <div className="border-b border-border px-5 py-3.5">
@@ -431,8 +427,8 @@ function DashboardPage() {
                         </span>
                       </div>
                       <div className="mt-1.5 flex h-1.5 w-full overflow-hidden rounded-full bg-surface-muted">
-                        <div className="bg-info" style={{ width: `${openPct}%` }} />
-                        <div className="bg-ai" style={{ width: `${draftPct}%` }} />
+                        <div className="bg-warning" style={{ width: `${openPct}%` }} />
+                        <div className="bg-primary" style={{ width: `${draftPct}%` }} />
                         <div className="bg-success" style={{ width: `${resPct}%` }} />
                       </div>
                       <div className="mt-1.5 flex items-center gap-3 text-[10.5px] text-muted-foreground tabular-nums">
