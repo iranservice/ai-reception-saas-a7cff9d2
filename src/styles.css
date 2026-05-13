@@ -41,6 +41,13 @@
   --color-warning-foreground: var(--warning-foreground);
   --color-info: var(--info);
   --color-info-foreground: var(--info-foreground);
+  --color-info-soft: var(--info-soft);
+  --color-attention: var(--attention);
+  --color-attention-foreground: var(--attention-foreground);
+  --color-attention-soft: var(--attention-soft);
+  --color-warning-soft: var(--warning-soft);
+  --color-success-soft: var(--success-soft);
+  --color-destructive-soft: var(--destructive-soft);
   --color-ai: var(--ai);
   --color-ai-foreground: var(--ai-foreground);
   --color-ai-soft: var(--ai-soft);
