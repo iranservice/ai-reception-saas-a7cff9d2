@@ -585,14 +585,39 @@ function StudioPage() {
       </header>
 
       <main className="mx-auto max-w-[1400px] px-6 py-8 space-y-12">
+        {/* Selected direction banner */}
+        <section className="card-premium ai-feature-bg ring-ai-feature p-6">
+          <div className="flex items-start gap-4 flex-wrap">
+            <div className="grid h-12 w-12 place-items-center rounded-2xl gradient-ai text-white shadow-ring-ai">
+              <Check className="h-6 w-6" />
+            </div>
+            <div className="flex-1 min-w-[260px]">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-ai/30 bg-ai-soft px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-ai">
+                  <Sparkles className="h-3 w-3" /> Selected · Applied globally
+                </span>
+              </div>
+              <h1 className="mt-2 text-2xl font-bold tracking-tight text-display gradient-text-primary">
+                Warm Premium AI Operations SaaS
+              </h1>
+              <p className="text-sm text-muted-foreground max-w-3xl mt-1.5">
+                A hybrid of Warm Premium SMB and AI Operations Pro. This is the unified visual identity used across
+                Dashboard, Inbox, Channels, Customers, Members, Settings, Audit Log and States — in both light and dark mode.
+              </p>
+            </div>
+            <Link to="/" className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3.5 py-2 text-[12.5px] font-semibold text-primary-foreground shadow-soft hover:opacity-95">
+              Open the app <ArrowUpRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+        </section>
+
         {/* Intro */}
         <section className="card-premium p-6">
-          <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Brief</div>
-          <h1 className="text-2xl font-bold tracking-tight text-display mt-1">Pick the visual identity for AI Reception</h1>
+          <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Reference</div>
+          <h2 className="text-xl font-bold tracking-tight text-display mt-1">Original direction comparison</h2>
           <p className="text-sm text-muted-foreground max-w-3xl mt-2">
-            Three serious directions, each applied to the same product surfaces (Dashboard, Inbox, Channel Command Center,
-            AI Draft Panel, Sidebar, KPIs, buttons, badges, table) so you can compare them fairly. Toggle Light / Dark above.
-            Mock data only — no production logic.
+            Three directions previewed side-by-side. The selected hybrid (above) is applied to the live app.
+            Toggle Light / Dark to inspect tokens. Mock data only — no production logic.
           </p>
         </section>
 
