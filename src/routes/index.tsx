@@ -91,51 +91,54 @@ const deltaStyles = {
 function DashboardPage() {
   return (
     <div className="mx-auto max-w-[1600px] px-4 py-6 lg:px-8 lg:py-8 space-y-6">
-      {/* Premium command bar header */}
-      <header className="relative overflow-hidden rounded-3xl border border-border/80 shadow-elev">
-        <div className="absolute inset-0 gradient-primary" aria-hidden />
-        <div className="pointer-events-none absolute inset-0 opacity-90" aria-hidden>
-          <div className="absolute -top-32 -right-24 h-80 w-80 rounded-full bg-[oklch(0.65_0.20_295)]/30 blur-3xl" />
-          <div className="absolute -bottom-32 left-24 h-72 w-72 rounded-full bg-[oklch(0.55_0.20_220)]/30 blur-3xl" />
-          <div className="absolute inset-0 grid-noise opacity-[0.08]" />
-        </div>
-        <div className="relative flex flex-wrap items-center justify-between gap-4 px-6 py-6 lg:px-8 lg:py-7">
+      {/* Command bar header — calm, premium */}
+      <header className="relative overflow-hidden rounded-2xl border border-border bg-card shadow-card">
+        <div
+          className="absolute inset-0 opacity-90"
+          aria-hidden
+          style={{
+            backgroundImage:
+              "linear-gradient(135deg, oklch(0.465 0.205 268) 0%, oklch(0.42 0.18 282) 100%)",
+          }}
+        />
+        <div className="pointer-events-none absolute inset-0 grid-noise opacity-[0.05]" aria-hidden />
+        <div className="relative flex flex-wrap items-center justify-between gap-4 px-6 py-5 lg:px-8 lg:py-6">
           <div className="min-w-0 flex items-center gap-4">
-            <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-white/15 text-white ring-1 ring-white/25 backdrop-blur shadow-soft">
+            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-white/12 text-white ring-1 ring-white/20">
               <CircleDot className="h-5 w-5" />
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-2 text-[11px] font-medium text-white/85">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2 py-0.5 ring-1 ring-white/25 backdrop-blur">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-300 animate-pulse" />
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/12 px-2 py-0.5 ring-1 ring-white/20">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" />
                   Live
                 </span>
                 <span className="truncate">{currentWorkspace.name}</span>
                 <span aria-hidden className="opacity-60">·</span>
                 <span className="opacity-90">{currentWorkspace.role}</span>
               </div>
-              <h1 className="mt-1.5 truncate text-[24px] lg:text-[30px] font-semibold tracking-tight leading-tight text-white">
-                Operations <span className="text-white/85">Command Center</span>
+              <h1 className="mt-1.5 truncate text-[22px] lg:text-[26px] font-semibold tracking-tight leading-tight text-white">
+                Operations <span className="text-white/80">Command Center</span>
               </h1>
-              <p className="mt-1 hidden sm:block text-[12.5px] text-white/75 max-w-xl">
+              <p className="mt-1 hidden sm:block text-[12.5px] text-white/70 max-w-xl">
                 Triage AI-prepared drafts, monitor channel health, and keep every customer reply human-reviewed.
               </p>
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <button className="hidden md:inline-flex items-center gap-2 rounded-lg bg-white/10 backdrop-blur ring-1 ring-white/25 px-3 py-2 text-[12px] font-medium text-white hover:bg-white/15">
+            <button className="hidden md:inline-flex items-center gap-2 rounded-lg bg-white/10 ring-1 ring-white/20 px-3 py-2 text-[12px] font-medium text-white hover:bg-white/15">
               <Calendar className="h-3.5 w-3.5" />
               Today
               <ChevronDown className="h-3.5 w-3.5 opacity-70" />
             </button>
-            <button className="hidden lg:inline-flex items-center gap-2 rounded-lg bg-white/10 backdrop-blur ring-1 ring-white/25 px-3 py-2 text-[12px] font-medium text-white/90 hover:bg-white/15">
+            <button className="hidden lg:inline-flex items-center gap-2 rounded-lg bg-white/10 ring-1 ring-white/20 px-3 py-2 text-[12px] font-medium text-white/90 hover:bg-white/15">
               <Search className="h-3.5 w-3.5" />
               <span className="opacity-80">Search…</span>
-              <kbd className="ml-2 rounded border border-white/30 bg-white/10 px-1 py-0.5 text-[10px]">⌘K</kbd>
+              <kbd className="ml-2 rounded border border-white/25 bg-white/10 px-1 py-0.5 text-[10px]">⌘K</kbd>
             </button>
             <Link
               to="/channels"
-              className="inline-flex items-center gap-1.5 rounded-lg bg-white/10 backdrop-blur ring-1 ring-white/25 px-3 py-2 text-[12px] font-medium text-white hover:bg-white/15"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-white/10 ring-1 ring-white/20 px-3 py-2 text-[12px] font-medium text-white hover:bg-white/15"
             >
               Channels
             </Link>
@@ -156,31 +159,22 @@ function DashboardPage() {
         {stats.map((s) => {
           const Icon = s.icon;
           const Trend = s.delta?.dir === "up" ? TrendingUp : s.delta?.dir === "down" ? TrendingDown : null;
-          const isFeatured = s.tone === "primary";
-          const tintClass = isFeatured
-            ? "ai-feature-bg ring-ai-feature"
-            : s.tone === "warning" ? "card-tinted-warning"
-            : s.tone === "danger" ? "card-tinted-danger"
-            : s.tone === "success" ? "card-tinted-primary" : "";
-          const iconClass = isFeatured
-            ? "bg-ai/10 text-ai ring-ai/30"
-            : toneStyles[s.tone];
           return (
             <div
               key={s.label}
-              style={{ ["--kpi-accent" as never]: isFeatured ? "var(--color-ai)" : toneAccent[s.tone] }}
-              className={`kpi-accent group relative overflow-hidden rounded-2xl border border-border/80 bg-card p-5 shadow-card transition hover:shadow-elev hover:-translate-y-0.5 ${tintClass}`}
+              style={{ ["--kpi-accent" as never]: toneAccent[s.tone] }}
+              className="kpi-accent group relative overflow-hidden rounded-xl border border-border bg-card p-5 shadow-soft transition hover:shadow-card"
             >
               <div className="relative flex items-start justify-between gap-2">
-                <span className={`text-[10.5px] font-bold uppercase tracking-[0.10em] ${isFeatured ? "text-ai" : "text-muted-foreground"}`}>
+                <span className="text-[10.5px] font-bold uppercase tracking-[0.10em] text-muted-foreground">
                   {s.label}
                 </span>
-                <div className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl ring-1 ring-inset shadow-soft ${iconClass}`}>
-                  <Icon className="h-[18px] w-[18px]" />
+                <div className={`grid h-9 w-9 shrink-0 place-items-center rounded-lg ring-1 ring-inset ${toneStyles[s.tone]}`}>
+                  <Icon className="h-[16px] w-[16px]" />
                 </div>
               </div>
-              <div className="relative mt-5 flex items-end justify-between gap-2">
-                <div className={`text-[38px] font-semibold leading-none tracking-tight font-mono-tab ${isFeatured ? "text-ai" : ""}`}>
+              <div className="relative mt-4 flex items-end justify-between gap-2">
+                <div className="text-[34px] font-semibold leading-none tracking-tight font-mono-tab text-foreground">
                   {s.value}
                 </div>
                 {s.delta && (
@@ -190,14 +184,8 @@ function DashboardPage() {
                   </span>
                 )}
               </div>
-              <div className="relative mt-2 flex items-center justify-between gap-2 text-[12px] leading-snug text-muted-foreground">
-                <span className="truncate">{s.hint}</span>
-                {isFeatured && (
-                  <span className="inline-flex items-center gap-1 text-[9.5px] font-bold uppercase tracking-wider text-ai">
-                    <span className="h-1.5 w-1.5 rounded-full bg-ai dot-glow" />
-                    AI Ready
-                  </span>
-                )}
+              <div className="relative mt-2 text-[12px] leading-snug text-muted-foreground truncate">
+                {s.hint}
               </div>
             </div>
           );
