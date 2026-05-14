@@ -1,16 +1,19 @@
 import type { ConvStatus, Channel, ChipStatus } from "@/lib/mock-data";
 import { Info } from "lucide-react";
 
+// Neutral-first: most chips are neutral. Color only when it carries meaning
+// (attention, error, AI review, success, urgent). Default operational states
+// like "new" / "open" stay neutral so the UI doesn't feel rainbow-colored.
 const chipStyles: Record<ChipStatus | "follow-up" | "urgent" | "active", string> = {
-  new: "bg-info/12 text-info ring-info/30",
-  open: "bg-info/12 text-info ring-info/25",
-  waiting: "bg-warning/15 text-warning-foreground ring-warning/35",
+  new: "bg-secondary text-secondary-foreground ring-border",
+  open: "bg-secondary text-secondary-foreground ring-border",
+  waiting: "bg-warning/12 text-warning-foreground ring-warning/25",
   closed: "bg-secondary text-muted-foreground ring-border",
-  "needs-review": "bg-ai-soft text-ai ring-ai/30",
-  "follow-up": "bg-attention/12 text-attention ring-attention/30",
-  urgent: "bg-destructive/12 text-destructive ring-destructive/30",
-  active: "bg-success/12 text-success ring-success/25",
-  "access-denied": "bg-destructive/12 text-destructive ring-destructive/30",
+  "needs-review": "bg-ai-soft text-ai ring-ai/25",
+  "follow-up": "bg-warning/12 text-warning-foreground ring-warning/25",
+  urgent: "bg-destructive/10 text-destructive ring-destructive/25",
+  active: "bg-success/10 text-success ring-success/20",
+  "access-denied": "bg-destructive/10 text-destructive ring-destructive/25",
   future: "bg-secondary text-muted-foreground ring-border",
 };
 
