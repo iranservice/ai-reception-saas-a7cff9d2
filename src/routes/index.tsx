@@ -391,14 +391,14 @@ function DashboardPage() {
                       <span className="text-[10.5px] text-muted-foreground tabular-nums shrink-0">{d.prepared}</span>
                     </div>
                     <div className="text-[11.5px] text-muted-foreground truncate">{d.subject}</div>
-                    <div className="mt-1.5 rounded-lg border border-dashed border-primary/25 bg-primary-soft/40 p-2.5 text-[12px] leading-snug text-foreground/90 line-clamp-2">
+                    <div className="mt-1.5 rounded-lg border border-dashed border-ai/25 bg-ai-soft/50 p-2.5 text-[12px] leading-snug text-foreground/90 line-clamp-2">
                       {d.draft}
                     </div>
                     <div className="mt-1.5 flex items-center justify-between text-[10.5px]">
                       <span className="text-muted-foreground">
                         Confidence: <span className="font-semibold text-foreground/80">{d.confidence}</span>
                       </span>
-                      <Link to="/inbox" className="font-semibold text-primary hover:underline inline-flex items-center gap-1">
+                      <Link to="/inbox" className="font-semibold text-ai hover:underline inline-flex items-center gap-1">
                         Review & send <ArrowUpRight className="h-3 w-3" />
                       </Link>
                     </div>
