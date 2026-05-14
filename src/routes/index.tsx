@@ -345,7 +345,7 @@ function DashboardPage() {
                           <div className="text-[9.5px] uppercase tracking-wider text-muted-foreground">Custs</div>
                         </div>
                         <div>
-                          <div className={`text-[12px] font-semibold tabular-nums ${c.waiting > 0 ? "text-warning-foreground" : ""}`}>{c.waiting}</div>
+                          <div className={`text-[12px] font-semibold tabular-nums ${c.waiting > 0 ? "text-attention" : ""}`}>{c.waiting}</div>
                           <div className="text-[9.5px] uppercase tracking-wider text-muted-foreground">Wait</div>
                         </div>
                         <div>
