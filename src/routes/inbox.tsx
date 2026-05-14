@@ -79,17 +79,19 @@ const inboxStatusLabel: Record<InboxStatus, string> = {
   closed: "Closed",
 };
 
+// Neutral-first: only states that demand operator action carry color.
+// Waiting / Needs follow-up share the attention (amber) family.
 const inboxStatusTone: Record<InboxStatus, string> = {
-  new: "bg-info/10 text-info border-info/20",
-  open: "bg-success/10 text-success border-success/20",
-  waiting: "bg-warning/15 text-warning-foreground border-warning/30",
-  "needs-followup": "bg-primary-soft text-primary border-primary/30",
-  closed: "bg-muted text-muted-foreground border-border",
+  new: "bg-secondary text-secondary-foreground border-border",
+  open: "bg-secondary text-secondary-foreground border-border",
+  waiting: "bg-warning/12 text-warning-foreground border-warning/25",
+  "needs-followup": "bg-warning/12 text-warning-foreground border-warning/25",
+  closed: "bg-secondary text-muted-foreground border-border",
 };
 
 const priorityTone: Record<Priority, { dot: string; label: string; text: string }> = {
   low: { dot: "bg-muted-foreground/40", label: "Low", text: "text-muted-foreground" },
-  normal: { dot: "bg-info", label: "Normal", text: "text-info" },
+  normal: { dot: "bg-muted-foreground/60", label: "Normal", text: "text-muted-foreground" },
   high: { dot: "bg-warning", label: "High", text: "text-warning-foreground" },
   urgent: { dot: "bg-destructive", label: "Urgent", text: "text-destructive" },
 };
