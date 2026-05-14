@@ -98,9 +98,9 @@ function DashboardPage() {
   return (
     <div className="mx-auto max-w-[1600px] px-4 py-6 lg:px-8 lg:py-8 space-y-6">
       {/* Command bar header — calm, premium */}
-      <header className="glass-surface relative overflow-hidden rounded-2xl">
+      <header className="relative overflow-hidden rounded-2xl border border-border bg-card shadow-card">
         <div
-          className="absolute inset-0 opacity-95"
+          className="absolute inset-0 opacity-90"
           aria-hidden
           style={{
             backgroundImage:
