@@ -2,16 +2,16 @@ import type { ConvStatus, Channel, ChipStatus } from "@/lib/mock-data";
 import { Info } from "lucide-react";
 
 const chipStyles: Record<ChipStatus | "follow-up" | "urgent" | "active", string> = {
-  new: "bg-info/12 text-info ring-info/30",
-  open: "bg-info/12 text-info ring-info/25",
-  waiting: "bg-warning/15 text-warning-foreground ring-warning/35",
+  new: "bg-secondary text-foreground/80 ring-border",
+  open: "bg-secondary text-foreground/80 ring-border",
+  waiting: "bg-attention/10 text-attention ring-attention/25",
   closed: "bg-secondary text-muted-foreground ring-border",
-  "needs-review": "bg-ai-soft text-ai ring-ai/30",
-  "follow-up": "bg-attention/12 text-attention ring-attention/30",
-  urgent: "bg-destructive/12 text-destructive ring-destructive/30",
-  active: "bg-success/12 text-success ring-success/25",
-  "access-denied": "bg-destructive/12 text-destructive ring-destructive/30",
-  future: "bg-secondary text-muted-foreground ring-border",
+  "needs-review": "bg-ai-soft text-ai ring-ai/25",
+  "follow-up": "bg-attention/10 text-attention ring-attention/25",
+  urgent: "bg-destructive/10 text-destructive ring-destructive/25",
+  active: "bg-success/10 text-success ring-success/25",
+  "access-denied": "bg-destructive/10 text-destructive ring-destructive/25",
+  future: "bg-secondary text-muted-foreground/80 ring-border",
 };
 
 const chipLabel: Record<ChipStatus | "follow-up" | "urgent" | "active", string> = {
