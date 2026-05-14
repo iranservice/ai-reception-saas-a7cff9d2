@@ -434,10 +434,10 @@ function DashboardPage() {
                           {op.role}
                         </span>
                       </div>
-                      <div className="mt-1.5 flex h-1.5 w-full overflow-hidden rounded-full bg-surface-muted">
-                        <div className="bg-warning" style={{ width: `${openPct}%` }} />
-                        <div className="bg-primary" style={{ width: `${draftPct}%` }} />
-                        <div className="bg-success" style={{ width: `${resPct}%` }} />
+                      <div className="mt-1.5 flex h-1.5 w-full overflow-hidden rounded-full bg-secondary">
+                        <div style={{ width: `${openPct}%`, backgroundColor: "var(--color-attention)" }} />
+                        <div style={{ width: `${draftPct}%`, backgroundColor: "var(--color-ai)" }} />
+                        <div style={{ width: `${resPct}%`, backgroundColor: "var(--color-success)" }} />
                       </div>
                       <div className="mt-1.5 flex items-center gap-3 text-[10.5px] text-muted-foreground tabular-nums">
                         <span className="inline-flex items-center gap-1"><Clock3 className="h-2.5 w-2.5" /><span className="font-semibold text-foreground">{op.open}</span> open</span>
