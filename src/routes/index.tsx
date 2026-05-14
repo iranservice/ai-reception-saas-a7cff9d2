@@ -199,7 +199,7 @@ function DashboardPage() {
             <div className="min-w-0">
               <div className="flex items-center gap-2">
                 <h2 className="text-[13px] font-semibold tracking-tight">Today's attention queue</h2>
-                <span className="rounded-full bg-warning/15 px-1.5 py-0.5 text-[10px] font-semibold text-warning-foreground">
+                <span className="rounded-full bg-secondary px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground ring-1 ring-inset ring-border">
                   {todaysQueue.length} items
                 </span>
               </div>
