@@ -51,6 +51,7 @@ import {
   PanelLeftOpen,
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import { InboxOperatorFirstEmpty, FilterNoMatchState } from "@/components/empty-states";
 
 export const Route = createFileRoute("/inbox")({
   head: () => ({
