@@ -226,7 +226,7 @@ export function AppShell({
             </div>
           </header>
 
-          <main className="flex-1 min-w-0 pb-20 md:pb-0">
+          <main className="flex-1 min-w-0 pb-16 md:pb-0">
             {children ?? <Outlet />}
           </main>
         </div>
