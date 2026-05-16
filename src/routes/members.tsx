@@ -182,17 +182,23 @@ function MembersPage() {
 
         {/* Safety strip */}
         <div className="mt-6 grid gap-3 md:grid-cols-2">
-          <div className="flex items-start gap-3 rounded-xl border border-border bg-surface px-4 py-3">
-            <Shield className="mt-1 h-4 w-4 text-primary" />
-            <div className="text-[12px] leading-snug text-muted-foreground">
-              <span className="font-medium text-foreground">Server verifies membership</span> on every tenant-scoped request. Client-side checks are UX only.
+          <div className="callout callout--primary">
+            <div className="callout-title">
+              <Shield className="callout-icon" />
+              Server verifies membership
             </div>
+            <p className="callout-body">
+              Every tenant-scoped request is checked server-side. Client-side checks are UX only.
+            </p>
           </div>
-          <div className="flex items-start gap-3 rounded-xl border border-border bg-surface px-4 py-3">
-            <Lock className="mt-1 h-4 w-4 text-warning-foreground" />
-            <div className="text-[12px] leading-snug text-muted-foreground">
-              <span className="font-medium text-foreground">The last Owner cannot be removed.</span> Removed members lose access immediately on next request.
+          <div className="callout callout--warning">
+            <div className="callout-title">
+              <Lock className="callout-icon" />
+              The last Owner cannot be removed
             </div>
+            <p className="callout-body">
+              Removed members lose access immediately on next request.
+            </p>
           </div>
         </div>
 
