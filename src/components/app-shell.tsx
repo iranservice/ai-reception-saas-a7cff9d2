@@ -517,7 +517,7 @@ function NavRow({
       {active && (
         <span className="absolute left-0 top-2 bottom-2 w-[3px] rounded-r-[2px] bg-primary" />
       )}
-      <span className="relative grid h-10 w-10 shrink-0 place-items-center">
+      <span className="relative grid h-9 w-10 shrink-0 place-items-center">
         <Icon
           className={`h-[18px] w-[18px] transition-colors ${
             active ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
