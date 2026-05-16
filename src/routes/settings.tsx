@@ -218,7 +218,7 @@ function SettingsPage() {
                   return (
                     <div
                       key={c.name}
-                      className="rounded-xl border border-dashed border-border bg-surface-muted/60 p-4 opacity-90"
+                      className="rounded-xl border border-dashed border-border bg-surface-muted/60 p-4"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex items-center gap-3">
@@ -227,15 +227,18 @@ function SettingsPage() {
                           </div>
                           <div>
                             <div className="text-sm font-medium">{c.name}</div>
-                            <div className="text-[11px] text-muted-foreground">{c.label}</div>
+                            <span
+                              className={`tag-base mt-1 ${
+                                c.label === "Future" ? "tag-future" : "tag-planned"
+                              }`}
+                            >
+                              {c.label}
+                            </span>
                           </div>
                         </div>
-                        <button
-                          disabled
-                          className="cursor-not-allowed rounded-md border border-border bg-surface px-3 py-1 text-[11px] font-medium text-muted-foreground"
-                        >
+                        <span className="tag-base tag-not-enabled cursor-not-allowed">
                           Not enabled
-                        </button>
+                        </span>
                       </div>
                       <p className="mt-3 text-xs text-muted-foreground">{c.desc}</p>
                     </div>
@@ -424,18 +427,18 @@ function Callout({
   title: string;
   body: string;
 }) {
-  const tones = {
-    info: "border-info/20 bg-info/10 text-info",
-    warning: "border-warning/30 bg-warning/10 text-warning-foreground",
-    primary: "border-primary/20 bg-primary-soft/40 text-primary",
+  const toneCls = {
+    info: "callout--info",
+    warning: "callout--warning",
+    primary: "callout--primary",
   } as const;
   return (
-    <div className={`mt-4 rounded-xl border p-4 ${tones[tone]}`}>
-      <div className="flex items-center gap-2 text-xs font-medium">
-        <Icon className="h-3.5 w-3.5" />
+    <div className={`callout mt-4 ${toneCls[tone]}`}>
+      <div className="callout-title">
+        <Icon className="callout-icon" />
         {title}
       </div>
-      <p className="mt-1 text-sm text-foreground/90">{body}</p>
+      <p className="callout-body">{body}</p>
     </div>
   );
 }

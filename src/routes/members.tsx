@@ -95,18 +95,20 @@ baseRows.push({
   workspace: currentWorkspace.name,
 });
 
+// Role pills: neutral surface + colored dot. Text always readable.
 const roleTone: Record<WorkspaceRole, string> = {
-  Owner: "bg-primary/10 text-primary border-primary/20",
-  Admin: "bg-info/10 text-info border-info/20",
-  Operator: "bg-success/10 text-success border-success/20",
-  Viewer: "bg-muted text-muted-foreground border-border",
+  Owner: "member-role member-role--owner",
+  Admin: "member-role member-role--admin",
+  Operator: "member-role member-role--operator",
+  Viewer: "member-role member-role--viewer",
 };
 
+// Status pills: soft background + text-tuned color.
 const statusTone: Record<MemberStatus, string> = {
-  Active: "bg-success/10 text-success border-success/20",
-  Invited: "bg-warning/15 text-warning-foreground border-warning/30",
-  Removed: "bg-muted text-muted-foreground border-border line-through",
-  Suspended: "bg-destructive/10 text-destructive border-destructive/20",
+  Active: "member-status member-status--active",
+  Invited: "member-status member-status--invited",
+  Removed: "member-status member-status--removed",
+  Suspended: "member-status member-status--suspended",
 };
 
 const roles: WorkspaceRole[] = ["Owner", "Admin", "Operator", "Viewer"];
@@ -180,17 +182,23 @@ function MembersPage() {
 
         {/* Safety strip */}
         <div className="mt-6 grid gap-3 md:grid-cols-2">
-          <div className="flex items-start gap-3 rounded-xl border border-border bg-surface px-4 py-3">
-            <Shield className="mt-1 h-4 w-4 text-primary" />
-            <div className="text-[12px] leading-snug text-muted-foreground">
-              <span className="font-medium text-foreground">Server verifies membership</span> on every tenant-scoped request. Client-side checks are UX only.
+          <div className="callout callout--primary">
+            <div className="callout-title">
+              <Shield className="callout-icon" />
+              Server verifies membership
             </div>
+            <p className="callout-body">
+              Every tenant-scoped request is checked server-side. Client-side checks are UX only.
+            </p>
           </div>
-          <div className="flex items-start gap-3 rounded-xl border border-border bg-surface px-4 py-3">
-            <Lock className="mt-1 h-4 w-4 text-warning-foreground" />
-            <div className="text-[12px] leading-snug text-muted-foreground">
-              <span className="font-medium text-foreground">The last Owner cannot be removed.</span> Removed members lose access immediately on next request.
+          <div className="callout callout--warning">
+            <div className="callout-title">
+              <Lock className="callout-icon" />
+              The last Owner cannot be removed
             </div>
+            <p className="callout-body">
+              Removed members lose access immediately on next request.
+            </p>
           </div>
         </div>
 

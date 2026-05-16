@@ -147,19 +147,12 @@ export function MockBanner() {
   const [dismissed, setDismissed] = useState(false);
   if (dismissed) return null;
   return (
-    <div
-      className="flex items-start gap-3 rounded-r-md border-l-[3px] px-4 py-[10px]"
-      style={{
-        background: "rgba(253, 171, 61, 0.06)",
-        borderLeftColor: "var(--status-pending)",
-      }}
-    >
-      <Info
-        className="mt-0.5 h-3.5 w-3.5 shrink-0"
-        style={{ color: "var(--status-pending)" }}
-      />
-      <div className="flex-1 text-[12px] leading-snug text-muted-foreground">
-        <span className="font-medium text-foreground">Prototype with mock data only.</span>{" "}
+    <div className="callout callout--pending flex items-start gap-3">
+      <Info className="callout-icon mt-0.5 shrink-0" />
+      <div className="flex-1 callout-body">
+        <span className="callout-title" style={{ marginBottom: 0, display: "inline" }}>
+          Prototype with mock data only.
+        </span>{" "}
         Async MVP, human-review-first. No backend, auth, or providers connected. AI prepares drafts; an operator sends every reply.
       </div>
       <button
