@@ -911,16 +911,16 @@ function ThreadItem({
   // Internal note
   if (message.author === "internal-note") {
     return (
-      <div className="rounded-xl border border-warning/40 bg-warning/10 p-3 shadow-soft">
-        <div className="mb-2 flex items-center justify-between text-[11px] text-warning-foreground">
-          <span className="inline-flex items-center gap-2 font-medium">
-            <StickyNote className="h-3 w-3" />
+      <div className="rounded-xl border border-border border-l-[3px] border-l-warning bg-warning/8 p-3 shadow-soft">
+        <div className="mb-2 flex items-center justify-between text-[11px]">
+          <span className="inline-flex items-center gap-2 font-medium text-foreground">
+            <StickyNote className="h-3 w-3 text-warning" />
             Internal note · {message.authorName}
           </span>
-          <span className="opacity-70 tabular-nums">{message.time}</span>
+          <span className="tabular-nums text-muted-foreground">{message.time}</span>
         </div>
         <p className="text-sm text-foreground/90">{message.body}</p>
-        <div className="mt-2 text-[10px] uppercase tracking-wider text-warning-foreground/70">
+        <div className="mt-2 text-[10px] uppercase tracking-wider text-muted-foreground">
           Not visible to customer
         </div>
       </div>
