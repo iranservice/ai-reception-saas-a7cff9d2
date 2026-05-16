@@ -159,9 +159,11 @@
 
   --surface: oklch(1 0 0);
   --surface-muted: oklch(0.982 0.006 252);
+  --surface-hover: oklch(0.962 0.012 252);
 
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.205 0.040 264);
+  --card-hover: oklch(0.972 0.010 252);
 
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.205 0.040 264);
