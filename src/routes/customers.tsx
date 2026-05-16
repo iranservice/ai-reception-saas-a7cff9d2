@@ -341,16 +341,18 @@ function CustomersPage() {
   );
 }
 
-function SummaryCard({ label, value, tone = "neutral" }: { label: string; value: number; tone?: "neutral" | "primary" | "warning" }) {
-  const toneCls = {
-    neutral: "text-foreground",
-    primary: "text-primary",
-    warning: "text-warning-foreground",
-  }[tone];
+function SummaryCard({ label, value, accent }: { label: string; value: number; accent: string }) {
   return (
-    <div className="rounded-xl border border-border bg-card p-4 shadow-soft">
-      <div className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{label}</div>
-      <div className={`mt-2 text-2xl font-medium tabular-nums tracking-tight ${toneCls}`}>{value}</div>
+    <div
+      style={{ ["--kpi-accent" as never]: accent }}
+      className="kpi-accent relative overflow-hidden rounded-xl bg-surface px-6 py-5 shadow-card dark:shadow-none"
+    >
+      <div className="text-[11px] font-medium uppercase tracking-[0.04em] text-muted-foreground">
+        {label}
+      </div>
+      <div className="mt-3 text-[32px] font-medium leading-none tabular-nums tracking-tight text-foreground" style={{ fontFeatureSettings: '"tnum" 1' }}>
+        {value}
+      </div>
     </div>
   );
 }
