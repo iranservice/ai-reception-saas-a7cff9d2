@@ -6,6 +6,13 @@ import {
   Sparkles,
   Plug,
   ScrollText,
+  Users,
+  Inbox as InboxIcon,
+  Send,
+  Eye,
+  ArrowDownToLine,
+  SearchX,
+  UserPlus,
   type LucideIcon,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
