@@ -220,14 +220,16 @@
 }
 
 .dark {
-  /* App bg #070B14 · surface #0F172A · elevated #111827 */
+  /* App bg deep · cards lifted ~9% L above bg so edges read from depth alone */
   --background: oklch(0.130 0.024 265);
   --foreground: oklch(0.975 0.005 250);
-  --surface: oklch(0.190 0.022 265);
-  --surface-muted: oklch(0.165 0.022 265);
-  --card: oklch(0.190 0.022 265);
+  --surface: oklch(0.220 0.022 265);
+  --surface-muted: oklch(0.180 0.022 265);
+  --surface-hover: oklch(0.260 0.024 265);
+  --card: oklch(0.220 0.022 265);
   --card-foreground: oklch(0.975 0.005 250);
-  --popover: oklch(0.205 0.022 265);
+  --card-hover: oklch(0.260 0.024 265);
+  --popover: oklch(0.235 0.022 265);
   --popover-foreground: oklch(0.975 0.005 250);
   /* Indigo #6366F1 */
   --primary: oklch(0.665 0.195 277);
