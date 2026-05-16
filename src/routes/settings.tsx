@@ -215,32 +215,33 @@ function SettingsPage() {
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
                 {futureIntegrations.map((c) => {
                   const Icon = c.icon;
+                  const tagVariant =
+                    c.label === "Future"
+                      ? "muted-status-tag--future"
+                      : "muted-status-tag--planned";
                   return (
-                    <div
-                      key={c.name}
-                      className="rounded-xl border border-dashed border-border bg-surface-muted/60 p-4"
-                    >
+                    <div key={c.name} className="muted-card p-4">
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex items-center gap-3">
-                          <div className="grid h-9 w-9 place-items-center rounded-lg bg-secondary text-muted-foreground">
+                          <div className="muted-icon-tile grid h-9 w-9 place-items-center rounded-lg">
                             <Icon className="h-4 w-4" />
                           </div>
                           <div>
-                            <div className="text-sm font-medium">{c.name}</div>
-                            <span
-                              className={`tag-base mt-1 ${
-                                c.label === "Future" ? "tag-future" : "tag-planned"
-                              }`}
-                            >
+                            <div className="text-sm font-medium text-[color:var(--text-secondary)]">
+                              {c.name}
+                            </div>
+                            <span className={`muted-status-tag mt-1 ${tagVariant}`}>
                               {c.label}
                             </span>
                           </div>
                         </div>
-                        <span className="tag-base tag-not-enabled cursor-not-allowed">
+                        <span className="muted-status-tag muted-status-tag--not-enabled">
                           Not enabled
                         </span>
                       </div>
-                      <p className="mt-3 text-xs text-muted-foreground">{c.desc}</p>
+                      <p className="mt-3 text-xs text-[color:var(--text-tertiary)]">
+                        {c.desc}
+                      </p>
                     </div>
                   );
                 })}

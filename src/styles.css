@@ -234,6 +234,7 @@
   --text-primary: oklch(0.205 0.040 264);
   --text-secondary: oklch(0.40 0.024 256);
   --text-tertiary: oklch(0.55 0.024 256);
+  --text-disabled: oklch(0.68 0.020 256);
 
   /* App + surface aliases for hand-written tokens (light) */
   --bg-app: oklch(0.970 0.008 260);
@@ -943,6 +944,118 @@
     text-decoration: line-through;
     text-decoration-color: var(--status-neutral);
     text-decoration-thickness: 1px;
+  }
+
+  /* ─── Muted inactive pattern ──────────────────────────────────────
+     For features that are NOT YET available (Planned, Future, Coming
+     soon, Not enabled, Unavailable). Identity is kept via a small
+     colored dot; everything else recedes to neutral/disabled tones.
+
+     Do NOT apply to real semantic states (Suspended, Invited, Removed,
+     Access denied, Expired session, Waiting, Closed). Those keep
+     their full status color. */
+  .muted-card {
+    background: rgba(0, 0, 0, 0.02);
+    border: 0.5px solid var(--border-subtle);
+    border-radius: 12px;
+    opacity: 0.78;
+  }
+  .dark .muted-card {
+    background: rgba(255, 255, 255, 0.025);
+  }
+  .muted-card:hover { opacity: 0.92; }
+
+  /* Status tag — neutral pill + identity-colored leading dot */
+  .muted-status-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--bg-app);
+    color: var(--text-secondary);
+    border: 0.5px solid var(--border-subtle);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1;
+  }
+  .muted-status-tag::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: var(--status-neutral);
+    flex-shrink: 0;
+  }
+  .muted-status-tag--planned::before     { background: var(--status-pending); }
+  .muted-status-tag--future::before      { background: var(--status-info); }
+  .muted-status-tag--not-enabled::before { background: var(--status-neutral); }
+  .muted-status-tag--unavailable::before { background: var(--status-warning); }
+  .muted-status-tag--coming-soon::before { background: var(--primary); }
+
+  /* CTA buttons inside muted cards */
+  .muted-cta {
+    background: var(--bg-app);
+    color: var(--text-tertiary);
+    border: 0.5px solid var(--border-subtle);
+    cursor: not-allowed;
+  }
+  .muted-cta:hover { background: var(--bg-app); color: var(--text-tertiary); }
+
+  /* Muted icon container — neutral fill with a faint identity ring */
+  .muted-icon-tile {
+    background: var(--bg-app);
+    color: var(--text-tertiary);
+  }
+  .muted-icon-tile[data-channel="whatsapp"]  { box-shadow: 0 0 0 1.5px rgba(37, 211, 102, 0.20); }
+  .muted-icon-tile[data-channel="instagram"] { box-shadow: 0 0 0 1.5px rgba(225, 48, 108, 0.20); }
+  .muted-icon-tile[data-channel="telegram"]  { box-shadow: 0 0 0 1.5px rgba(0, 136, 204, 0.20); }
+  .muted-icon-tile[data-channel="sms"]       { box-shadow: 0 0 0 1.5px rgba(97, 97, 255, 0.20); }
+  .muted-icon-tile[data-channel="voice"]     { box-shadow: 0 0 0 1.5px rgba(253, 171, 61, 0.20); }
+  .muted-icon-tile[data-channel="email"]     { box-shadow: 0 0 0 1.5px rgba(74, 144, 226, 0.20); }
+  .muted-icon-tile[data-channel="webchat"]   { box-shadow: 0 0 0 1.5px rgba(124, 124, 255, 0.20); }
+
+  /* Filter chip with channel dot + SOON tag */
+  .muted-filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 4px 4px 10px;
+    background: var(--bg-app);
+    border: 0.5px solid var(--border-subtle);
+    color: var(--text-tertiary);
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 500;
+    opacity: 0.8;
+    cursor: not-allowed;
+    line-height: 1;
+  }
+  .muted-filter-chip .chip-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: var(--status-neutral);
+    flex-shrink: 0;
+    filter: saturate(0.75);
+  }
+  .muted-filter-chip .chip-dot[data-channel="instagram"] { background: var(--channel-instagram); }
+  .muted-filter-chip .chip-dot[data-channel="whatsapp"]  { background: var(--channel-whatsapp); }
+  .muted-filter-chip .chip-dot[data-channel="telegram"]  { background: var(--channel-telegram); }
+  .muted-filter-chip .chip-dot[data-channel="sms"]       { background: var(--channel-sms); }
+  .muted-filter-chip .chip-dot[data-channel="voice"]     { background: var(--channel-voice); }
+  .muted-filter-chip .soon-tag {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    padding: 2px 5px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border-subtle);
+    color: var(--text-tertiary);
+    border-radius: 3px;
+    margin-left: 4px;
+    text-transform: uppercase;
+    line-height: 1;
   }
 }
 

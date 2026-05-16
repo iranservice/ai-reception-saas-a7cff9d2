@@ -209,15 +209,15 @@ function InboxPage() {
     />
   );
 
-  const channelChips: { value: Channel | "planned" | "future" | "all"; label: string; planned?: boolean }[] = [
+  const channelChips: { value: Channel | "planned" | "future" | "all"; label: string; planned?: boolean; dotChannel?: string }[] = [
     { value: "all", label: "All" },
     { value: "webform", label: "Web" },
     { value: "email", label: "Email" },
-    { value: "planned", label: "Instagram", planned: true },
-    { value: "planned", label: "WhatsApp", planned: true },
-    { value: "planned", label: "Telegram", planned: true },
-    { value: "planned", label: "SMS", planned: true },
-    { value: "future", label: "Voice", planned: true },
+    { value: "planned", label: "Instagram", planned: true, dotChannel: "instagram" },
+    { value: "planned", label: "WhatsApp", planned: true, dotChannel: "whatsapp" },
+    { value: "planned", label: "Telegram", planned: true, dotChannel: "telegram" },
+    { value: "planned", label: "SMS", planned: true, dotChannel: "sms" },
+    { value: "future", label: "Voice", planned: true, dotChannel: "voice" },
   ];
 
   const queueRows = inboxSectionGroups[0].rows;
@@ -326,16 +326,25 @@ function InboxPage() {
                         setSection({ kind: "channel", value: chip.value as Channel, label: chip.label });
                       }
                     }}
-                    className={`shrink-0 rounded-full border px-3 py-1 text-[11px] font-medium transition ${
-                      isActive
-                        ? "border-primary bg-primary text-primary-foreground"
-                        : chip.planned
-                        ? "border-dashed border-border text-muted-foreground/60 cursor-not-allowed"
-                        : "border-border bg-surface text-muted-foreground hover:bg-secondary hover:text-foreground"
-                    }`}
+                    className={
+                      chip.planned
+                        ? "muted-filter-chip shrink-0"
+                        : `shrink-0 rounded-full border px-3 py-1 text-[11px] font-medium transition ${
+                            isActive
+                              ? "border-primary bg-primary text-primary-foreground"
+                              : "border-border bg-surface text-muted-foreground hover:bg-secondary hover:text-foreground"
+                          }`
+                    }
                   >
-                    {chip.label}
-                    {chip.planned && <span className="ml-1 text-[9px] uppercase opacity-70">soon</span>}
+                    {chip.planned ? (
+                      <>
+                        <span className="chip-dot" data-channel={chip.dotChannel} />
+                        <span className="label">{chip.label}</span>
+                        <span className="soon-tag">SOON</span>
+                      </>
+                    ) : (
+                      chip.label
+                    )}
                   </button>
                 );
               })}

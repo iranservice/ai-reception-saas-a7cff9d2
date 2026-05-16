@@ -239,7 +239,7 @@ export function AIUnavailableState() {
   return (
     <EmptyState
       icon={Sparkles}
-      tone="warning"
+      tone="neutral"
       badge="AI unavailable"
       title="AI assistance is paused"
       description="AI assistance is unavailable. Operators can continue manually."
@@ -252,6 +252,7 @@ export function FutureProviderState({ provider }: { provider?: string }) {
   return (
     <EmptyState
       icon={Plug}
+      tone="neutral"
       badge="Planned"
       title={provider ? `${provider} is not enabled` : "Provider not enabled"}
       description="This provider is planned but not enabled in the MVP."
