@@ -548,7 +548,7 @@ function InboxPage() {
                 onClick={() => setNoteMode(true)}
                 className={`inline-flex items-center gap-1 rounded-md px-2 py-1 font-medium transition ${
                   noteMode
-                    ? "bg-warning/30 text-warning-foreground"
+                    ? "bg-warning/30 text-warning-foreground dark:text-[var(--status-warning-text)]"
                     : "text-muted-foreground hover:bg-secondary"
                 }`}
               >
@@ -893,7 +893,7 @@ function ThreadItem({
       message.author === "system-assignment"
         ? "border-info/30 text-info"
         : message.author === "system-status"
-          ? "border-warning/30 text-warning-foreground"
+          ? "border-warning/30 text-warning-foreground dark:text-[var(--status-warning-text)]"
           : "border-primary/30 text-primary";
     return (
       <div className="flex items-center gap-3">
@@ -1043,7 +1043,7 @@ const inboxSectionGroups: SectionGroup[] = [
 const badgeToneClass: Record<NonNullable<SectionRow["badgeTone"]>, string> = {
   primary: "bg-primary-soft text-primary",
   muted: "bg-secondary text-muted-foreground",
-  warning: "bg-warning/20 text-warning-foreground",
+  warning: "bg-warning/20 text-warning-foreground dark:text-[var(--status-warning-text)]",
   success: "bg-success/10 text-success",
   info: "bg-info/10 text-info",
 };
