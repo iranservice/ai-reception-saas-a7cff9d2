@@ -12,6 +12,7 @@ import {
 } from "@/lib/mock-data";
 import { Search, Download, Shield, Users, ChevronRight, AlertTriangle, MessageCircle } from "lucide-react";
 import type { ChannelKey } from "@/lib/mock-data";
+import { CustomersOperatorFirstEmpty, FilterNoMatchState } from "@/components/empty-states";
 
 const channelToKey = (c: Channel): ChannelKey => (c === "webform" ? "webchat" : (c as ChannelKey));
 
