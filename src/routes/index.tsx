@@ -175,7 +175,7 @@ function DashboardPage() {
                 </div>
               </div>
               <div className="relative mt-4 flex items-end justify-between gap-2">
-                <div className="text-[32px] font-medium leading-none tabular-nums text-foreground">
+                <div className="text-[32px] font-medium leading-none tabular-nums tracking-tight text-foreground">
                   {s.value}
                 </div>
                 {s.delta && (

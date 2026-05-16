@@ -42,7 +42,7 @@ export const Route = createFileRoute("/customers/$customerId")({
   notFoundComponent: () => (
     <>
       <div className="mx-auto max-w-3xl px-6 py-16 text-center">
-        <h1 className="text-xl font-medium">Customer not found</h1>
+        <h1 className="text-xl font-medium tracking-tight">Customer not found</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           This profile doesn't exist in the current workspace.
         </p>

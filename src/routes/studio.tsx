@@ -597,7 +597,7 @@ function StudioPage() {
                   <Sparkles className="h-3 w-3" /> Selected · Applied globally
                 </span>
               </div>
-              <h1 className="mt-2 text-2xl font-medium tracking-tight text-display gradient-text-primary">
+              <h1 className="mt-2 text-2xl font-medium tracking-tight text-display gradient-text-primary tracking-tight">
                 Warm Premium AI Operations SaaS
               </h1>
               <p className="text-sm text-muted-foreground max-w-3xl mt-1.5">
@@ -614,7 +614,7 @@ function StudioPage() {
         {/* Intro */}
         <section className="card-premium p-6">
           <div className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Reference</div>
-          <h2 className="text-xl font-medium tracking-tight text-display mt-1">Original direction comparison</h2>
+          <h2 className="text-xl font-medium tracking-tight text-display mt-1 tracking-tight">Original direction comparison</h2>
           <p className="text-sm text-muted-foreground max-w-3xl mt-2">
             Three directions previewed side-by-side. The selected hybrid (above) is applied to the live app.
             Toggle Light / Dark to inspect tokens. Mock data only — no production logic.
@@ -627,7 +627,7 @@ function StudioPage() {
             <div className="flex items-end justify-between gap-4 flex-wrap">
               <div>
                 <div className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Option {dir.id}</div>
-                <h2 className="text-xl font-medium text-display">{dir.name}</h2>
+                <h2 className="text-xl font-medium text-display tracking-tight">{dir.name}</h2>
                 <p className="text-sm text-muted-foreground max-w-2xl">{dir.tagline}</p>
               </div>
               <div className="text-[11px] text-muted-foreground"><span className="font-medium text-foreground">Best for:</span> {dir.best}</div>
@@ -642,7 +642,7 @@ function StudioPage() {
             <Sparkles className="h-4 w-4 text-ai" />
             <div className="text-[11px] font-medium uppercase tracking-wider text-ai">Recommended Direction</div>
           </div>
-          <h2 className="text-2xl font-medium text-display">Warm Premium AI Operations SaaS</h2>
+          <h2 className="text-2xl font-medium text-display tracking-tight">Warm Premium AI Operations SaaS</h2>
           <p className="text-sm text-muted-foreground max-w-3xl mt-2">
             A hybrid of <span className="font-medium text-foreground">Warm Premium SMB</span> (warm neutrals, friendly typography,
             calm cards) and <span className="font-medium text-foreground">AI Operations Pro</span> (refined blue/violet AI accents,
@@ -675,7 +675,7 @@ function StudioPage() {
         {/* Token reference */}
         <section className="card-premium p-6">
           <div className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Design system — recommended direction</div>
-          <h2 className="text-xl font-medium text-display mt-1">Tokens, type, spacing, radius, elevation</h2>
+          <h2 className="text-xl font-medium text-display mt-1 tracking-tight">Tokens, type, spacing, radius, elevation</h2>
           <div className="grid md:grid-cols-2 gap-6 mt-5">
             <div>
               <div className="text-xs font-medium text-foreground mb-2">Light mode color tokens</div>
