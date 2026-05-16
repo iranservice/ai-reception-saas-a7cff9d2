@@ -14,7 +14,7 @@ import {
   Plus,
   Radio,
   PanelLeftClose,
-  PanelLeftOpen,
+  
   HelpCircle,
   ChevronsUpDown,
   Shield,
@@ -180,18 +180,16 @@ export function AppShell({
         />
 
         {/* Main */}
-        <div data-sidebar-collapsed={collapsed} className="flex-1 flex min-w-0 flex-col transition-[width] duration-300 ease-in-out">
+        <div data-sidebar-collapsed={collapsed} className="flex-1 flex min-w-0 flex-col">
           <header className="sticky top-0 z-20 flex h-14 items-center gap-3 glass-chrome px-4 lg:px-6">
             <button
               onClick={toggle}
               aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
               className="hidden md:inline-grid h-9 w-9 place-items-center rounded-lg border border-border bg-surface text-muted-foreground transition hover:text-foreground hover:bg-secondary"
             >
-              {collapsed ? (
-                <PanelLeftOpen className="h-4 w-4" />
-              ) : (
-                <PanelLeftClose className="h-4 w-4" />
-              )}
+              <PanelLeftClose
+                className={`sidebar-toggle-icon h-4 w-4 ${collapsed ? "rotate-180" : ""}`}
+              />
             </button>
             <div className="relative w-full max-w-md group">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-primary" />
@@ -349,7 +347,7 @@ function SharedSidebar({
   return (
     <aside
       data-collapsed={collapsed}
-      className={`hidden md:flex shrink-0 flex-col border-r border-sidebar-border bg-sidebar/95 backdrop-blur transition-[width] duration-300 ease-in-out overflow-hidden sticky top-0 h-screen [height:100dvh] self-start ${
+      className={`hidden md:flex shrink-0 flex-col border-r border-sidebar-border bg-sidebar/95 backdrop-blur sidebar-anim sticky top-0 h-screen [height:100dvh] self-start ${
         collapsed ? "w-16" : "w-[240px]"
       }`}
     >
@@ -403,14 +401,10 @@ function SharedSidebar({
       <div className="flex-1 overflow-y-auto py-2">
         {MENU_CONFIG.sections.map((section, idx) => (
           <div key={section.id} className={idx > 0 ? "mt-3" : ""}>
-            {!collapsed ? (
-              <div className="px-4 pb-2 pt-2 text-[10px] font-medium uppercase tracking-[0.08em] text-muted-foreground/70">
-                {section.title}
-              </div>
-            ) : idx > 0 ? (
-              <div className="mx-3 my-2 h-px bg-sidebar-border/60" />
-            ) : null}
-            <nav className={`px-2 space-y-1 ${collapsed ? "flex flex-col items-center" : ""}`}>
+            <div className="sidebar-section-title px-4 pb-2 pt-2 text-[10px] font-medium uppercase tracking-[0.08em] text-muted-foreground/70">
+              {section.title}
+            </div>
+            <nav className="px-3 space-y-1">
               {section.items.map((item) => (
                 <NavRow
                   key={item.to + item.label}
@@ -481,59 +475,40 @@ function NavRow({
 }) {
   const Icon = item.icon;
 
-  if (collapsed) {
-    return (
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Link
-            to={item.to as "/"}
-            aria-label={item.label}
-            className={`group relative grid h-10 w-10 place-items-center rounded-xl transition ${
-              active
-                ? "bg-primary-soft text-primary"
-                : "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
-            }`}
-          >
-            {active && (
-              <span className="absolute -left-3 top-1.5 bottom-1.5 w-[3px] rounded-[2px] bg-primary" />
-            )}
-            <Icon className="h-[18px] w-[18px]" />
-            {item.badge ? (
-              <span className={`absolute -right-1 -top-1 flex items-center justify-center min-w-[20px] h-[18px] px-1.5 rounded-[9px] text-[11px] font-medium tabular-nums ${active ? "bg-primary/20 text-primary" : "bg-background dark:bg-white/[0.08] text-muted-foreground"}`}>
-                {item.badge}
-              </span>
-            ) : null}
-          </Link>
-        </TooltipTrigger>
-        <TooltipContent side="right" className="text-xs">
-          {item.label}
-          {item.badge ? ` · ${item.badge}` : ""}
-        </TooltipContent>
-      </Tooltip>
-    );
-  }
-
-  return (
+  const row = (
     <Link
       to={item.to as "/"}
+      aria-label={item.label}
       className={[
-        "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium transition-all duration-200",
+        "group relative flex items-center h-10 w-full rounded-xl transition-colors",
         active
-          ? "nav-active"
+          ? "bg-primary-soft text-primary"
           : "text-sidebar-foreground/80 hover:bg-sidebar-accent/70 hover:text-sidebar-accent-foreground",
       ].join(" ")}
     >
-      {active && <span className="nav-active-bar" />}
-      <Icon
-        className={[
-          "h-[16px] w-[16px] transition-colors",
-          active ? "text-primary" : "text-muted-foreground group-hover:text-foreground",
-        ].join(" ")}
-      />
-      <span className="flex-1 truncate">{item.label}</span>
+      {active && (
+        <span className="absolute left-0 top-2 bottom-2 w-[3px] rounded-r-[2px] bg-primary" />
+      )}
+      <span className="relative grid h-10 w-10 shrink-0 place-items-center">
+        <Icon
+          className={`h-[18px] w-[18px] transition-colors ${
+            active ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
+          }`}
+        />
+        {item.badge ? (
+          <span
+            className={`sidebar-badge-dot absolute top-1.5 right-1.5 h-[6px] w-[6px] rounded-full ${
+              active ? "bg-primary" : "bg-muted-foreground/70"
+            }`}
+          />
+        ) : null}
+      </span>
+      <span className="sidebar-label flex-1 truncate text-[13px] font-medium leading-none">
+        {item.label}
+      </span>
       {item.badge ? (
         <span
-          className={`flex items-center justify-center min-w-[20px] h-[18px] px-1.5 rounded-[9px] text-[11px] font-medium tabular-nums ${
+          className={`sidebar-badge mr-2 flex items-center justify-center min-w-[20px] h-[18px] px-1.5 rounded-[9px] text-[11px] font-medium tabular-nums ${
             active
               ? "bg-primary/20 text-primary"
               : "bg-background dark:bg-white/[0.08] text-muted-foreground"
@@ -544,6 +519,20 @@ function NavRow({
       ) : null}
     </Link>
   );
+
+  if (collapsed) {
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>{row}</TooltipTrigger>
+        <TooltipContent side="right" className="text-xs">
+          {item.label}
+          {item.badge ? ` · ${item.badge}` : ""}
+        </TooltipContent>
+      </Tooltip>
+    );
+  }
+
+  return row;
 }
 
 function BottomIcon({
