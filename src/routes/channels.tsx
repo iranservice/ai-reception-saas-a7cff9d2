@@ -84,8 +84,8 @@ function ChannelCard({ c }: { c: ChannelOverview }) {
       }`}
     >
       <div className="flex items-start justify-between gap-3">
-        <ChannelIcon channel={c.key} inactive={!isActive} />
-        <StatusPill status={c.status} />
+        <ChannelIcon channel={c.key} size="lg" state={statusToState(c.status)} />
+        <ChannelStateTag state={statusToState(c.status)} />
       </div>
       <h3
         className={`mt-4 text-base tracking-tight ${
