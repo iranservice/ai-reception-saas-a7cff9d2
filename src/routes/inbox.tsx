@@ -97,7 +97,7 @@ const inboxStatusTone: Record<InboxStatus, string> = {
 const priorityTone: Record<Priority, { dot: string; label: string; text: string }> = {
   low: { dot: "bg-muted-foreground/35", label: "Low", text: "text-muted-foreground" },
   normal: { dot: "bg-muted-foreground/55", label: "Normal", text: "text-muted-foreground" },
-  high: { dot: "bg-attention", label: "High", text: "text-attention" },
+  high: { dot: "bg-attention", label: "High", text: "text-foreground" },
   urgent: { dot: "bg-destructive", label: "Urgent", text: "text-destructive" },
 };
 

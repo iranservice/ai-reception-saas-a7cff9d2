@@ -76,7 +76,7 @@ const iconTone: Record<Tone, string> = {
   neutral: "bg-secondary text-muted-foreground",
   info: "bg-info/10 text-info",
   warning: "bg-warning/10 text-foreground",
-  attention: "bg-attention/10 text-attention",
+  attention: "bg-attention/10 text-foreground",
   ai: "bg-ai-soft text-ai",
   danger: "bg-destructive/10 text-destructive",
   success: "bg-success/10 text-success",
