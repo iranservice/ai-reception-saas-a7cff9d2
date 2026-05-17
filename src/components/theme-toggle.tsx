@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Moon, Sun, Monitor, Stars } from "lucide-react";
+import { Moon, Sun, Monitor, MoonStar } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
