@@ -56,7 +56,7 @@ const ORDER: Theme[] = ["light", "dark", "night", "system"];
 const ICONS: Record<Theme, typeof Sun> = {
   light: Sun,
   dark: Moon,
-  night: Stars,
+  night: MoonStar,
   system: Monitor,
 };
 const LABELS: Record<Theme, string> = {
