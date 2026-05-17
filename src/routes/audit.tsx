@@ -281,7 +281,7 @@ function ResultBadge({ result }: { result: AuditResult }) {
   const map = {
     Success: { Icon: ShieldCheck, cls: "border-success/20 bg-success/10 text-success" },
     Denied: { Icon: ShieldOff, cls: "border-destructive/20 bg-destructive/10 text-destructive" },
-    Failed: { Icon: ShieldAlert, cls: "border-warning/30 bg-warning/15 text-warning-foreground dark:text-[var(--status-warning-text)]" },
+    Failed: { Icon: ShieldAlert, cls: "border-warning/30 bg-warning/15 text-foreground" },
   } as const;
   const { Icon, cls } = map[result];
   return (

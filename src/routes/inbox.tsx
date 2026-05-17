@@ -89,8 +89,8 @@ const inboxStatusLabel: Record<InboxStatus, string> = {
 const inboxStatusTone: Record<InboxStatus, string> = {
   new: "bg-secondary text-secondary-foreground border-border",
   open: "bg-info/10 text-info border-info/25",
-  waiting: "bg-warning/12 text-warning-foreground dark:text-[var(--status-warning-text)] border-warning/30",
-  "needs-followup": "bg-attention/12 text-attention dark:text-[var(--status-pending-text)] border-attention/30",
+  waiting: "bg-warning/12 text-foreground border-warning/30",
+  "needs-followup": "bg-attention/12 text-foreground border-attention/30",
   closed: "bg-success/8 text-success/85 border-success/20",
 };
 
@@ -557,7 +557,7 @@ function InboxPage() {
                 onClick={() => setNoteMode(true)}
                 className={`inline-flex items-center gap-1 rounded-md px-2 py-1 font-medium transition ${
                   noteMode
-                    ? "bg-warning/30 text-warning-foreground dark:text-[var(--status-warning-text)]"
+                    ? "bg-warning/30 text-foreground"
                     : "text-muted-foreground hover:bg-secondary"
                 }`}
               >
@@ -902,7 +902,7 @@ function ThreadItem({
       message.author === "system-assignment"
         ? "border-info/30 text-info"
         : message.author === "system-status"
-          ? "border-warning/30 text-warning-foreground dark:text-[var(--status-warning-text)]"
+          ? "border-warning/30 text-foreground"
           : "border-primary/30 text-primary";
     return (
       <div className="flex items-center gap-3">
@@ -1052,7 +1052,7 @@ const inboxSectionGroups: SectionGroup[] = [
 const badgeToneClass: Record<NonNullable<SectionRow["badgeTone"]>, string> = {
   primary: "bg-primary-soft text-primary",
   muted: "bg-secondary text-muted-foreground",
-  warning: "bg-warning/20 text-warning-foreground dark:text-[var(--status-warning-text)]",
+  warning: "bg-warning/20 text-foreground",
   success: "bg-success/10 text-success",
   info: "bg-info/10 text-info",
 };
