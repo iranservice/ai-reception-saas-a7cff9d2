@@ -27,6 +27,7 @@ export type ChannelKey =
   | "instagram"
   | "whatsapp"
   | "telegram"
+  | "facebook"
   | "sms"
   | "voice";
 
