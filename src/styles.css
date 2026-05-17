@@ -146,6 +146,22 @@
   --channel-messenger: #0084FF;
   --channel-linkedin:  #0A66C2;
   --channel-voice:     #FDAB3D;
+  --channel-facebook:  #0084FF;
+
+  /* ============================================================
+     Channel Identity Tokens (unified registry — src/lib/channels.ts)
+     Brand colors. Device-agnostic, theme-agnostic.
+     Always reference via var(--ch-*). Never hard-code a hex in components.
+     ============================================================ */
+  --ch-webchat:   var(--primary);
+  --ch-email:     #4A90E2;
+  --ch-whatsapp:  #25D366;
+  --ch-instagram: #E1306C;
+  --ch-telegram:  #0088CC;
+  --ch-facebook:  #0084FF;
+  --ch-sms:       #7C3AED;
+  --ch-call:      #D4A24C;
+
   /* Neutrals — cool blue-gray scale (Light) */
   --c-neutral-0:   oklch(1 0 0);
   --c-neutral-25:  oklch(0.982 0.006 252);
