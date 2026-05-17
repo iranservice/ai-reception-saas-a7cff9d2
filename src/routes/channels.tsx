@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MockBanner, PageHeader } from "@/components/ui-bits";
 import { ChannelIcon } from "@/components/channel-icon";
+import { ChannelStateTag } from "@/components/channel-state-tag";
+import type { ChannelState } from "@/lib/channels";
 import {
   channelOverview,
   type ChannelStatus,
@@ -30,19 +32,6 @@ export const Route = createFileRoute("/channels")({
   component: ChannelsPage,
 });
 
-const statusTone: Record<ChannelStatus, string> = {
-  "Mock Active": "bg-success/10 text-success border-success/20",
-  Planned: "bg-warning/15 text-foreground border-warning/30",
-  Future: "bg-muted text-muted-foreground border-border",
-  "Not enabled in MVP": "bg-muted text-muted-foreground border-border",
-};
-
-/** Map a ChannelStatus → muted-status-tag variant for inactive (not-yet) features. */
-const mutedTagVariant: Partial<Record<ChannelStatus, string>> = {
-  Planned: "muted-status-tag--planned",
-  Future: "muted-status-tag--future",
-  "Not enabled in MVP": "muted-status-tag--not-enabled",
-};
 
 const healthLabel: Record<ChannelHealth, string> = {
   healthy: "Healthy (mock)",
@@ -58,23 +47,17 @@ const healthDot: Record<ChannelHealth, string> = {
   "n/a": "bg-muted-foreground/40",
 };
 
-function StatusPill({ status }: { status: ChannelStatus }) {
-  // Inactive (not-yet) statuses use the unified muted tag.
-  if (status !== "Mock Active") {
-    return (
-      <span className={`muted-status-tag ${mutedTagVariant[status] ?? ""}`}>
-        {status}
-      </span>
-    );
+function statusToState(status: ChannelStatus): ChannelState {
+  switch (status) {
+    case "Mock Active":
+      return "active";
+    case "Planned":
+      return "planned";
+    case "Future":
+    case "Not enabled in MVP":
+    default:
+      return "not_connected";
   }
-  return (
-    <span
-      className={`inline-flex items-center gap-2 rounded-full border px-2 py-1 text-[11px] font-medium ${statusTone[status]}`}
-    >
-      <span className="h-1.5 w-1.5 rounded-full bg-current opacity-70" />
-      {status}
-    </span>
-  );
 }
 
 function ChannelCard({ c }: { c: ChannelOverview }) {
@@ -88,8 +71,8 @@ function ChannelCard({ c }: { c: ChannelOverview }) {
       }`}
     >
       <div className="flex items-start justify-between gap-3">
-        <ChannelIcon channel={c.key} inactive={!isActive} />
-        <StatusPill status={c.status} />
+        <ChannelIcon channel={c.key} size="lg" state={statusToState(c.status)} />
+        <ChannelStateTag state={statusToState(c.status)} />
       </div>
       <h3
         className={`mt-4 text-base tracking-tight ${
