@@ -11,7 +11,9 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "snapshot:pills": "bun run tests/visual/pills.snapshot.tsx",
-    "snapshot:pills:update": "bun run tests/visual/pills.snapshot.tsx --update"
+    "snapshot:pills:update": "bun run tests/visual/pills.snapshot.tsx --update",
+    "snapshot:pixels": "bun run tests/visual/pixels.snapshot.ts",
+    "snapshot:pixels:update": "bun run tests/visual/pixels.snapshot.ts --update"
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "^1.25.5",
