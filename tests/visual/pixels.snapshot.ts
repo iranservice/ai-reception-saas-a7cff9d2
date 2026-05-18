@@ -81,14 +81,21 @@ async function captureBreakpoint(
     reducedMotion: "reduce",
   });
   const page: Page = await context.newPage();
-  // Kill animations/transitions outright — pulse on connecting state etc.
-  await page.addInitScript(() => {
-    const style = document.createElement("style");
-    style.textContent = `*,*::before,*::after{animation:none!important;transition:none!important;caret-color:transparent!important}`;
-    document.documentElement.appendChild(style);
-  });
+  const KILL_MOTION = `*,*::before,*::after{animation:none!important;animation-duration:0s!important;animation-delay:-1s!important;animation-iteration-count:1!important;transition:none!important;caret-color:transparent!important}`;
+  await page.addInitScript((css: string) => {
+    const apply = () => {
+      const s = document.createElement("style");
+      s.textContent = css;
+      (document.head || document.documentElement).appendChild(s);
+    };
+    if (document.head) apply();
+    else document.addEventListener("DOMContentLoaded", apply);
+  }, KILL_MOTION);
   await page.goto(url, { waitUntil: "networkidle" });
+  await page.addStyleTag({ content: KILL_MOTION });
   await page.evaluate(() => document.fonts?.ready);
+  // Let one frame pass so the style applies before we snapshot.
+  await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => r(null)))));
 
   const ids: string[] = await page.$$eval("[data-pill-id]", (els) =>
     (els as HTMLElement[]).map((e) => e.getAttribute("data-pill-id") || ""),
