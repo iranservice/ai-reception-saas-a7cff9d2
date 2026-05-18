@@ -11,7 +11,9 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "snapshot:pills": "bun run tests/visual/pills.snapshot.tsx",
-    "snapshot:pills:update": "bun run tests/visual/pills.snapshot.tsx --update"
+    "snapshot:pills:update": "bun run tests/visual/pills.snapshot.tsx --update",
+    "snapshot:pixels": "bun run tests/visual/pixels.snapshot.ts",
+    "snapshot:pixels:update": "bun run tests/visual/pixels.snapshot.ts --update"
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "^1.25.5",
@@ -72,6 +74,8 @@
     "@eslint/js": "^9.32.0",
     "@lovable.dev/vite-tanstack-config": "^1.5.1",
     "@types/node": "^22.16.5",
+    "@types/pixelmatch": "^5.2.6",
+    "@types/pngjs": "^6.0.5",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^5.0.4",
@@ -81,6 +85,9 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^15.15.0",
+    "pixelmatch": "^7.2.0",
+    "playwright": "^1.60.0",
+    "pngjs": "^7.0.0",
     "prettier": "^3.7.3",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.56.1",
