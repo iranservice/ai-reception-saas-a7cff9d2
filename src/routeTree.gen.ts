@@ -16,6 +16,7 @@ import { Route as StatesRouteImport } from './routes/states'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SessionExpiredRouteImport } from './routes/session-expired'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MembersRouteImport } from './routes/members'
 import { Route as LoginRouteImport } from './routes/login'
@@ -73,6 +74,11 @@ const SettingsRoute = SettingsRouteImport.update({
 const SessionExpiredRoute = SessionExpiredRouteImport.update({
   id: '/session-expired',
   path: '/session-expired',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NotificationsRoute = NotificationsRouteImport.update({
@@ -203,6 +209,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/members': typeof MembersRoute
   '/notifications': typeof NotificationsRoute
+  '/profile': typeof ProfileRoute
   '/session-expired': typeof SessionExpiredRoute
   '/settings': typeof SettingsRouteWithChildren
   '/signup': typeof SignupRoute
@@ -235,6 +242,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/members': typeof MembersRoute
   '/notifications': typeof NotificationsRoute
+  '/profile': typeof ProfileRoute
   '/session-expired': typeof SessionExpiredRoute
   '/settings': typeof SettingsRouteWithChildren
   '/signup': typeof SignupRoute
@@ -268,6 +276,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/members': typeof MembersRoute
   '/notifications': typeof NotificationsRoute
+  '/profile': typeof ProfileRoute
   '/session-expired': typeof SessionExpiredRoute
   '/settings': typeof SettingsRouteWithChildren
   '/signup': typeof SignupRoute
@@ -302,6 +311,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/members'
     | '/notifications'
+    | '/profile'
     | '/session-expired'
     | '/settings'
     | '/signup'
@@ -334,6 +344,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/members'
     | '/notifications'
+    | '/profile'
     | '/session-expired'
     | '/settings'
     | '/signup'
@@ -366,6 +377,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/members'
     | '/notifications'
+    | '/profile'
     | '/session-expired'
     | '/settings'
     | '/signup'
@@ -399,6 +411,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   MembersRoute: typeof MembersRoute
   NotificationsRoute: typeof NotificationsRoute
+  ProfileRoute: typeof ProfileRoute
   SessionExpiredRoute: typeof SessionExpiredRoute
   SettingsRoute: typeof SettingsRouteWithChildren
   SignupRoute: typeof SignupRoute
@@ -466,6 +479,13 @@ declare module '@tanstack/react-router' {
       path: '/session-expired'
       fullPath: '/session-expired'
       preLoaderRoute: typeof SessionExpiredRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/notifications': {
@@ -680,6 +700,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   MembersRoute: MembersRoute,
   NotificationsRoute: NotificationsRoute,
+  ProfileRoute: ProfileRoute,
   SessionExpiredRoute: SessionExpiredRoute,
   SettingsRoute: SettingsRouteWithChildren,
   SignupRoute: SignupRoute,
