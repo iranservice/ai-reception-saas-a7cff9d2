@@ -423,6 +423,7 @@ function SharedSidebar({
             <TooltipTrigger asChild>
               <button
                 aria-label="AI Active — Human-in-the-loop"
+                // eslint-disable-next-line local/no-pill-contrast-violation -- icon-only tile; text-primary sets icon currentColor
                 className="mx-auto grid h-10 w-10 place-items-center rounded-xl bg-primary/15 ring-1 ring-inset ring-primary/25 text-primary transition hover:bg-primary/20"
               >
                 <Sparkles className="h-4 w-4" />
@@ -538,7 +539,7 @@ function NavRow({
         <span
           className={`sidebar-badge mr-2 flex items-center justify-center min-w-[20px] h-[18px] px-1.5 rounded-[9px] text-[11px] font-medium tabular-nums ${
             active
-              ? "bg-primary/20 text-primary"
+              ? "bg-primary/20 text-foreground"
               : "bg-background dark:bg-white/[0.08] text-muted-foreground"
           }`}
         >
