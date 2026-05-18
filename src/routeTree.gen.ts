@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as StudioRouteImport } from './routes/studio'
 import { Route as StatesRouteImport } from './routes/states'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as MembersRouteImport } from './routes/members'
 import { Route as LoginRouteImport } from './routes/login'
@@ -30,6 +31,11 @@ const StudioRoute = StudioRouteImport.update({
 const StatesRoute = StatesRouteImport.update({
   id: '/states',
   path: '/states',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
@@ -92,6 +98,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/members': typeof MembersRoute
   '/settings': typeof SettingsRoute
+  '/signup': typeof SignupRoute
   '/states': typeof StatesRoute
   '/studio': typeof StudioRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
@@ -106,6 +113,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/members': typeof MembersRoute
   '/settings': typeof SettingsRoute
+  '/signup': typeof SignupRoute
   '/states': typeof StatesRoute
   '/studio': typeof StudioRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
@@ -121,6 +129,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/members': typeof MembersRoute
   '/settings': typeof SettingsRoute
+  '/signup': typeof SignupRoute
   '/states': typeof StatesRoute
   '/studio': typeof StudioRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
@@ -137,6 +146,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/members'
     | '/settings'
+    | '/signup'
     | '/states'
     | '/studio'
     | '/customers/$customerId'
@@ -151,6 +161,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/members'
     | '/settings'
+    | '/signup'
     | '/states'
     | '/studio'
     | '/customers/$customerId'
@@ -165,6 +176,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/members'
     | '/settings'
+    | '/signup'
     | '/states'
     | '/studio'
     | '/customers/$customerId'
@@ -180,6 +192,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   MembersRoute: typeof MembersRoute
   SettingsRoute: typeof SettingsRoute
+  SignupRoute: typeof SignupRoute
   StatesRoute: typeof StatesRoute
   StudioRoute: typeof StudioRoute
   DevPillGalleryRoute: typeof DevPillGalleryRoute
@@ -199,6 +212,13 @@ declare module '@tanstack/react-router' {
       path: '/states'
       fullPath: '/states'
       preLoaderRoute: typeof StatesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -295,6 +315,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   MembersRoute: MembersRoute,
   SettingsRoute: SettingsRoute,
+  SignupRoute: SignupRoute,
   StatesRoute: StatesRoute,
   StudioRoute: StudioRoute,
   DevPillGalleryRoute: DevPillGalleryRoute,
