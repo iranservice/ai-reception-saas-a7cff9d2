@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader, MockBanner } from "@/components/ui-bits";
-import { BookOpen, ArrowRight } from "lucide-react";
 import { currentWorkspace } from "@/lib/mock-data";
 import {
   Mail,
@@ -16,6 +15,8 @@ import {
   Eye,
   AlertTriangle,
   Smartphone,
+  BookOpen,
+  ArrowRight,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 
