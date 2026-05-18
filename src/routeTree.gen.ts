@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as StudioRouteImport } from './routes/studio'
 import { Route as StatesRouteImport } from './routes/states'
 import { Route as SignupRouteImport } from './routes/signup'
@@ -24,6 +25,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as DevPillGalleryRouteImport } from './routes/dev.pill-gallery'
 import { Route as CustomersCustomerIdRouteImport } from './routes/customers.$customerId'
 
+const VerifyEmailRoute = VerifyEmailRouteImport.update({
+  id: '/verify-email',
+  path: '/verify-email',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StudioRoute = StudioRouteImport.update({
   id: '/studio',
   path: '/studio',
@@ -108,6 +114,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/states': typeof StatesRoute
   '/studio': typeof StudioRoute
+  '/verify-email': typeof VerifyEmailRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
   '/dev/pill-gallery': typeof DevPillGalleryRoute
 }
@@ -124,6 +131,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/states': typeof StatesRoute
   '/studio': typeof StudioRoute
+  '/verify-email': typeof VerifyEmailRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
   '/dev/pill-gallery': typeof DevPillGalleryRoute
 }
@@ -141,6 +149,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/states': typeof StatesRoute
   '/studio': typeof StudioRoute
+  '/verify-email': typeof VerifyEmailRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
   '/dev/pill-gallery': typeof DevPillGalleryRoute
 }
@@ -159,6 +168,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/states'
     | '/studio'
+    | '/verify-email'
     | '/customers/$customerId'
     | '/dev/pill-gallery'
   fileRoutesByTo: FileRoutesByTo
@@ -175,6 +185,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/states'
     | '/studio'
+    | '/verify-email'
     | '/customers/$customerId'
     | '/dev/pill-gallery'
   id:
@@ -191,6 +202,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/states'
     | '/studio'
+    | '/verify-email'
     | '/customers/$customerId'
     | '/dev/pill-gallery'
   fileRoutesById: FileRoutesById
@@ -208,11 +220,19 @@ export interface RootRouteChildren {
   SignupRoute: typeof SignupRoute
   StatesRoute: typeof StatesRoute
   StudioRoute: typeof StudioRoute
+  VerifyEmailRoute: typeof VerifyEmailRoute
   DevPillGalleryRoute: typeof DevPillGalleryRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/verify-email': {
+      id: '/verify-email'
+      path: '/verify-email'
+      fullPath: '/verify-email'
+      preLoaderRoute: typeof VerifyEmailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/studio': {
       id: '/studio'
       path: '/studio'
@@ -339,6 +359,7 @@ const rootRouteChildren: RootRouteChildren = {
   SignupRoute: SignupRoute,
   StatesRoute: StatesRoute,
   StudioRoute: StudioRoute,
+  VerifyEmailRoute: VerifyEmailRoute,
   DevPillGalleryRoute: DevPillGalleryRoute,
 }
 export const routeTree = rootRouteImport
