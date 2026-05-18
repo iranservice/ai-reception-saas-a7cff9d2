@@ -10,6 +10,7 @@ import {
 } from "@tanstack/react-router";
 import { AppShell } from "@/components/app-shell";
 import { themeBootScript } from "@/components/theme-toggle";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 import appCss from "../styles.css?url";
 
@@ -143,7 +144,9 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {isAuth ? <Outlet /> : <AppShell><Outlet /></AppShell>}
+      <TooltipProvider delayDuration={150}>
+        {isAuth ? <Outlet /> : <AppShell><Outlet /></AppShell>}
+      </TooltipProvider>
     </QueryClientProvider>
   );
 }
