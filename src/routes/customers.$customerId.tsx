@@ -349,7 +349,7 @@ function timelineLabel(m: Message) {
 function MessageBadge({ author }: { author: Message["author"] }) {
   if (author === "operator")
     return (
-      <span className="rounded-sm bg-primary/15 px-1 text-[10px] font-medium uppercase tracking-wider text-primary">
+      <span className="rounded-sm bg-primary/15 px-1 text-[10px] font-medium uppercase tracking-wider text-foreground ring-1 ring-inset ring-primary/30">
         Op
       </span>
     );
