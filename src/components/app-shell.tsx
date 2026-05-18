@@ -23,6 +23,8 @@ import {
   X,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { NotificationCenter } from "@/components/notification-center";
+import { ProfileMenu } from "@/components/profile-menu";
 import { workspaces, type WorkspaceRole } from "@/lib/mock-data";
 import {
   Tooltip,
