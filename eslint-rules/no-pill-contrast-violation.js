@@ -29,7 +29,11 @@ const VARIANTS = [
 function findViolation(value) {
   if (typeof value !== "string" || value.length === 0) return null;
   for (const v of VARIANTS) {
-    const bgRe = new RegExp(`(?:^|\\s)bg-${v}(?:-soft|\\/[\\d.]+)?(?=\\s|$)`);
+    // Pill signature: tinted background uses an opacity modifier — bg-{v}/<n>.
+    // Bare `bg-{v}` (solid) and `bg-{v}-soft` (icon-tile convention) are
+    // legitimate and intentionally NOT matched here.
+    const bgRe = new RegExp(`(?:^|\\s)bg-${v}\\/[\\d.]+(?=\\s|$)`);
+    // Matching colored text — but NOT `text-{v}-foreground` (the solid inverse).
     const txtRe = new RegExp(`(?:^|\\s)text-${v}(?:\\/[\\d.]+)?(?!-foreground)(?=\\s|$|/)`);
     if (bgRe.test(value) && txtRe.test(value)) return v;
   }
