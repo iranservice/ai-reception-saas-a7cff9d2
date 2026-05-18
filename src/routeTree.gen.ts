@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WidgetPreviewRouteImport } from './routes/widget-preview'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as StudioRouteImport } from './routes/studio'
 import { Route as StatesRouteImport } from './routes/states'
@@ -33,7 +34,13 @@ import { Route as OnboardingAiRouteImport } from './routes/onboarding.ai'
 import { Route as InviteTokenRouteImport } from './routes/invite.$token'
 import { Route as DevPillGalleryRouteImport } from './routes/dev.pill-gallery'
 import { Route as CustomersCustomerIdRouteImport } from './routes/customers.$customerId'
+import { Route as ChatBusinessIdRouteImport } from './routes/chat.$businessId'
 
+const WidgetPreviewRoute = WidgetPreviewRouteImport.update({
+  id: '/widget-preview',
+  path: '/widget-preview',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VerifyEmailRoute = VerifyEmailRouteImport.update({
   id: '/verify-email',
   path: '/verify-email',
@@ -154,6 +161,11 @@ const CustomersCustomerIdRoute = CustomersCustomerIdRouteImport.update({
   path: '/$customerId',
   getParentRoute: () => CustomersRoute,
 } as any)
+const ChatBusinessIdRoute = ChatBusinessIdRouteImport.update({
+  id: '/chat/$businessId',
+  path: '/chat/$businessId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -171,6 +183,8 @@ export interface FileRoutesByFullPath {
   '/states': typeof StatesRoute
   '/studio': typeof StudioRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/widget-preview': typeof WidgetPreviewRoute
+  '/chat/$businessId': typeof ChatBusinessIdRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
   '/dev/pill-gallery': typeof DevPillGalleryRoute
   '/invite/$token': typeof InviteTokenRoute
@@ -197,6 +211,8 @@ export interface FileRoutesByTo {
   '/states': typeof StatesRoute
   '/studio': typeof StudioRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/widget-preview': typeof WidgetPreviewRoute
+  '/chat/$businessId': typeof ChatBusinessIdRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
   '/dev/pill-gallery': typeof DevPillGalleryRoute
   '/invite/$token': typeof InviteTokenRoute
@@ -224,6 +240,8 @@ export interface FileRoutesById {
   '/states': typeof StatesRoute
   '/studio': typeof StudioRoute
   '/verify-email': typeof VerifyEmailRoute
+  '/widget-preview': typeof WidgetPreviewRoute
+  '/chat/$businessId': typeof ChatBusinessIdRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
   '/dev/pill-gallery': typeof DevPillGalleryRoute
   '/invite/$token': typeof InviteTokenRoute
@@ -252,6 +270,8 @@ export interface FileRouteTypes {
     | '/states'
     | '/studio'
     | '/verify-email'
+    | '/widget-preview'
+    | '/chat/$businessId'
     | '/customers/$customerId'
     | '/dev/pill-gallery'
     | '/invite/$token'
@@ -278,6 +298,8 @@ export interface FileRouteTypes {
     | '/states'
     | '/studio'
     | '/verify-email'
+    | '/widget-preview'
+    | '/chat/$businessId'
     | '/customers/$customerId'
     | '/dev/pill-gallery'
     | '/invite/$token'
@@ -304,6 +326,8 @@ export interface FileRouteTypes {
     | '/states'
     | '/studio'
     | '/verify-email'
+    | '/widget-preview'
+    | '/chat/$businessId'
     | '/customers/$customerId'
     | '/dev/pill-gallery'
     | '/invite/$token'
@@ -331,6 +355,8 @@ export interface RootRouteChildren {
   StatesRoute: typeof StatesRoute
   StudioRoute: typeof StudioRoute
   VerifyEmailRoute: typeof VerifyEmailRoute
+  WidgetPreviewRoute: typeof WidgetPreviewRoute
+  ChatBusinessIdRoute: typeof ChatBusinessIdRoute
   DevPillGalleryRoute: typeof DevPillGalleryRoute
   InviteTokenRoute: typeof InviteTokenRoute
   OnboardingAiRoute: typeof OnboardingAiRoute
@@ -343,6 +369,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/widget-preview': {
+      id: '/widget-preview'
+      path: '/widget-preview'
+      fullPath: '/widget-preview'
+      preLoaderRoute: typeof WidgetPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/verify-email': {
       id: '/verify-email'
       path: '/verify-email'
@@ -511,6 +544,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CustomersCustomerIdRouteImport
       parentRoute: typeof CustomersRoute
     }
+    '/chat/$businessId': {
+      id: '/chat/$businessId'
+      path: '/chat/$businessId'
+      fullPath: '/chat/$businessId'
+      preLoaderRoute: typeof ChatBusinessIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -542,6 +582,8 @@ const rootRouteChildren: RootRouteChildren = {
   StatesRoute: StatesRoute,
   StudioRoute: StudioRoute,
   VerifyEmailRoute: VerifyEmailRoute,
+  WidgetPreviewRoute: WidgetPreviewRoute,
+  ChatBusinessIdRoute: ChatBusinessIdRoute,
   DevPillGalleryRoute: DevPillGalleryRoute,
   InviteTokenRoute: InviteTokenRoute,
   OnboardingAiRoute: OnboardingAiRoute,
@@ -554,3 +596,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
