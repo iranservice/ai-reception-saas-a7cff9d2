@@ -18,6 +18,7 @@ import { Route as CustomersRouteImport } from './routes/customers'
 import { Route as ChannelsRouteImport } from './routes/channels'
 import { Route as AuditRouteImport } from './routes/audit'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DevPillGalleryRouteImport } from './routes/dev.pill-gallery'
 import { Route as CustomersCustomerIdRouteImport } from './routes/customers.$customerId'
 
 const StudioRoute = StudioRouteImport.update({
@@ -65,6 +66,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DevPillGalleryRoute = DevPillGalleryRouteImport.update({
+  id: '/dev/pill-gallery',
+  path: '/dev/pill-gallery',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CustomersCustomerIdRoute = CustomersCustomerIdRouteImport.update({
   id: '/$customerId',
   path: '/$customerId',
@@ -82,6 +88,7 @@ export interface FileRoutesByFullPath {
   '/states': typeof StatesRoute
   '/studio': typeof StudioRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
+  '/dev/pill-gallery': typeof DevPillGalleryRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -94,6 +101,7 @@ export interface FileRoutesByTo {
   '/states': typeof StatesRoute
   '/studio': typeof StudioRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
+  '/dev/pill-gallery': typeof DevPillGalleryRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -107,6 +115,7 @@ export interface FileRoutesById {
   '/states': typeof StatesRoute
   '/studio': typeof StudioRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
+  '/dev/pill-gallery': typeof DevPillGalleryRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -121,6 +130,7 @@ export interface FileRouteTypes {
     | '/states'
     | '/studio'
     | '/customers/$customerId'
+    | '/dev/pill-gallery'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -133,6 +143,7 @@ export interface FileRouteTypes {
     | '/states'
     | '/studio'
     | '/customers/$customerId'
+    | '/dev/pill-gallery'
   id:
     | '__root__'
     | '/'
@@ -145,6 +156,7 @@ export interface FileRouteTypes {
     | '/states'
     | '/studio'
     | '/customers/$customerId'
+    | '/dev/pill-gallery'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -157,6 +169,7 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   StatesRoute: typeof StatesRoute
   StudioRoute: typeof StudioRoute
+  DevPillGalleryRoute: typeof DevPillGalleryRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -224,6 +237,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dev/pill-gallery': {
+      id: '/dev/pill-gallery'
+      path: '/dev/pill-gallery'
+      fullPath: '/dev/pill-gallery'
+      preLoaderRoute: typeof DevPillGalleryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/customers/$customerId': {
       id: '/customers/$customerId'
       path: '/$customerId'
@@ -256,7 +276,18 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   StatesRoute: StatesRoute,
   StudioRoute: StudioRoute,
+  DevPillGalleryRoute: DevPillGalleryRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
