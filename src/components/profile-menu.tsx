@@ -12,6 +12,7 @@ import {
   ArrowLeftRight,
   Shield,
   Palette,
+  Users,
 } from "lucide-react";
 import {
   Popover,
