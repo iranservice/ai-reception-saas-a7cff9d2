@@ -10,7 +10,7 @@ import {
   AlertCircle,
   Search,
   Sparkles,
-  Bell as _Bell,
+  
   Plus,
   Radio,
   PanelLeftClose,
