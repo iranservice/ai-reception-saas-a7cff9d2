@@ -1,5 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader, MockBanner } from "@/components/ui-bits";
+import { BookOpen, ArrowRight } from "lucide-react";
 import { currentWorkspace } from "@/lib/mock-data";
 import {
   Mail,
