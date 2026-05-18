@@ -18,6 +18,7 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SessionExpiredRouteImport } from './routes/session-expired'
 import { Route as MembersRouteImport } from './routes/members'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as KnowledgeRouteImport } from './routes/knowledge'
 import { Route as InboxRouteImport } from './routes/inbox'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as CustomersRouteImport } from './routes/customers'
@@ -81,6 +82,11 @@ const MembersRoute = MembersRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KnowledgeRoute = KnowledgeRouteImport.update({
+  id: '/knowledge',
+  path: '/knowledge',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InboxRoute = InboxRouteImport.update({
@@ -187,6 +193,7 @@ export interface FileRoutesByFullPath {
   '/customers': typeof CustomersRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/inbox': typeof InboxRoute
+  '/knowledge': typeof KnowledgeRoute
   '/login': typeof LoginRoute
   '/members': typeof MembersRoute
   '/session-expired': typeof SessionExpiredRoute
@@ -217,6 +224,7 @@ export interface FileRoutesByTo {
   '/customers': typeof CustomersRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/inbox': typeof InboxRoute
+  '/knowledge': typeof KnowledgeRoute
   '/login': typeof LoginRoute
   '/members': typeof MembersRoute
   '/session-expired': typeof SessionExpiredRoute
@@ -248,6 +256,7 @@ export interface FileRoutesById {
   '/customers': typeof CustomersRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/inbox': typeof InboxRoute
+  '/knowledge': typeof KnowledgeRoute
   '/login': typeof LoginRoute
   '/members': typeof MembersRoute
   '/session-expired': typeof SessionExpiredRoute
@@ -280,6 +289,7 @@ export interface FileRouteTypes {
     | '/customers'
     | '/forgot-password'
     | '/inbox'
+    | '/knowledge'
     | '/login'
     | '/members'
     | '/session-expired'
@@ -310,6 +320,7 @@ export interface FileRouteTypes {
     | '/customers'
     | '/forgot-password'
     | '/inbox'
+    | '/knowledge'
     | '/login'
     | '/members'
     | '/session-expired'
@@ -340,6 +351,7 @@ export interface FileRouteTypes {
     | '/customers'
     | '/forgot-password'
     | '/inbox'
+    | '/knowledge'
     | '/login'
     | '/members'
     | '/session-expired'
@@ -371,6 +383,7 @@ export interface RootRouteChildren {
   CustomersRoute: typeof CustomersRouteWithChildren
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   InboxRoute: typeof InboxRoute
+  KnowledgeRoute: typeof KnowledgeRoute
   LoginRoute: typeof LoginRoute
   MembersRoute: typeof MembersRoute
   SessionExpiredRoute: typeof SessionExpiredRoute
@@ -454,6 +467,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/knowledge': {
+      id: '/knowledge'
+      path: '/knowledge'
+      fullPath: '/knowledge'
+      preLoaderRoute: typeof KnowledgeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/inbox': {
@@ -636,6 +656,7 @@ const rootRouteChildren: RootRouteChildren = {
   CustomersRoute: CustomersRouteWithChildren,
   ForgotPasswordRoute: ForgotPasswordRoute,
   InboxRoute: InboxRoute,
+  KnowledgeRoute: KnowledgeRoute,
   LoginRoute: LoginRoute,
   MembersRoute: MembersRoute,
   SessionExpiredRoute: SessionExpiredRoute,
