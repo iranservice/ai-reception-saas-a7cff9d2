@@ -125,14 +125,24 @@ function RootShell({ children }: { children: React.ReactNode }) {
   );
 }
 
+const AUTH_ROUTE_PREFIXES = [
+  "/login",
+  "/signup",
+  "/forgot-password",
+  "/verify-email",
+  "/invite",
+  "/access-denied",
+  "/session-expired",
+];
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isAuth = AUTH_ROUTE_PREFIXES.some((p) => pathname === p || pathname.startsWith(p + "/"));
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AppShell>
-        <Outlet />
-      </AppShell>
+      {isAuth ? <Outlet /> : <AppShell><Outlet /></AppShell>}
     </QueryClientProvider>
   );
 }
