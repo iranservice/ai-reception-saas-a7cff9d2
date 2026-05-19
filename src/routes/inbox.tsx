@@ -565,17 +565,45 @@ function InboxPage() {
 
           {/* Composer (sticky on mobile, padded above floating bottom nav) */}
           <div className="border-t border-border bg-surface px-4 py-3 sm:px-6 sm:py-4 pb-[88px] md:pb-4">
-            {aiDraft && !noteMode && (
+            {stateOverride === "ai-unavailable" && (
+              <div className="mb-3">
+                <StateBanner
+                  icon={SparklesIcon}
+                  tone="warning"
+                  title="AI assistance unavailable"
+                  description="Operators can still reply manually. AI draft assistance is temporarily unavailable."
+                  actions={[
+                    { label: "Continue manually", variant: "primary", onClick: () => undefined },
+                    { label: "Open AI settings", to: "/settings/ai", variant: "secondary" },
+                  ]}
+                />
+              </div>
+            )}
+            {aiDraft && !noteMode && stateOverride !== "ai-unavailable" && (
               <div className="mb-3">
                 <AIDraftPanel
                   draft={aiDraft.body}
-                  confidence={active.priority === "urgent" ? "Low" : active.priority === "high" ? "High" : "Medium"}
+                  confidence={
+                    stateOverride === "low-confidence"
+                      ? "Low"
+                      : active.priority === "urgent"
+                        ? "Low"
+                        : active.priority === "high"
+                          ? "High"
+                          : "Medium"
+                  }
+                  riskNote={
+                    stateOverride === "low-confidence"
+                      ? "Review source/context before sending."
+                      : undefined
+                  }
                   onAccept={(t) => setDraft(t)}
                   onEdit={(t) => setDraft(t)}
                   onReject={() => setDraft("")}
                 />
               </div>
             )}
+
 
             <div className="flex items-center gap-1 pb-2 text-[11px]">
               <button
