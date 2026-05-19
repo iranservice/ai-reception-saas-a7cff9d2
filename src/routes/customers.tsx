@@ -126,6 +126,26 @@ function CustomersPage() {
     [rows],
   );
 
+  if (stateOverride === "empty") {
+    return (
+      <RouteStatePage title="Customers" description="Reception directory.">
+        {statePresets.customersEmpty()}
+      </RouteStatePage>
+    );
+  }
+  if (stateOverride === "access-denied") {
+    return (
+      <RouteStatePage title="Customers">{statePresets.customersAccessDenied()}</RouteStatePage>
+    );
+  }
+  if (stateOverride === "loading") {
+    return (
+      <RouteStatePage title="Customers" description="Loading customers…">
+        <RouteSkeleton variant="table" />
+      </RouteStatePage>
+    );
+  }
+
   return (
     <>
       <div className="mx-auto max-w-7xl px-4 py-6 lg:px-8 lg:py-8">
