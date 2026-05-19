@@ -187,7 +187,10 @@ function AuditPage() {
               {filtered.map((e) => (
                 <li key={e.id}>
                   <button
-                    onClick={() => setSelectedId(e.id)}
+                    onClick={() => {
+                      setSelectedId(e.id);
+                      setMobileDetailOpen(true);
+                    }}
                     className={`flex w-full items-start gap-3 px-4 py-4 text-left transition ${
                       selected?.id === e.id ? "bg-primary-soft/30" : "hover:bg-surface-muted/60"
                     }`}
@@ -201,11 +204,12 @@ function AuditPage() {
                       <div className="mt-1 truncate text-[12px] text-muted-foreground">
                         {e.actionLabel} · {e.target}
                       </div>
-                      <div className="mt-2 flex items-center gap-2">
+                      <div className="mt-1 truncate text-[11px] text-muted-foreground">
+                        {e.workspace} · {e.actorType}
+                      </div>
+                      <div className="mt-2 flex items-center justify-between gap-2">
                         <ResultBadge result={e.result} />
-                        <span className="rounded-md border border-border bg-surface px-2 py-1 text-[10px] font-medium text-muted-foreground">
-                          {e.workspace}
-                        </span>
+                        <span className="text-[11px] font-medium text-primary">View details →</span>
                       </div>
                     </div>
                   </button>
@@ -217,6 +221,7 @@ function AuditPage() {
                 </li>
               )}
             </ul>
+
 
             <div className="border-t border-border bg-surface-muted/40 px-4 py-2 text-[11px] text-muted-foreground">
               Showing {filtered.length} of {auditEvents.length} mock events · Retention is a planned capability.
