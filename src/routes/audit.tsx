@@ -24,6 +24,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { EmptyAuditState } from "@/components/empty-states";
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 
 export const Route = createFileRoute("/audit")({
   head: () => ({
