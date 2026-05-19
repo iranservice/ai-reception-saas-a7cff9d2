@@ -321,7 +321,7 @@ export function AppShell({
               className="absolute inset-0 bg-foreground/40 animate-fade-in"
               onClick={() => setMoreOpen(false)}
             />
-            <div className="absolute inset-x-0 bottom-0 rounded-t-3xl border-t border-border bg-surface p-4 shadow-pop animate-slide-in-right">
+            <div className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-3xl border-t border-border bg-surface p-4 shadow-pop animate-slide-in-right">
               <div className="mb-3 flex items-center justify-between">
                 <div className="text-sm font-medium">More</div>
                 <button
@@ -332,26 +332,42 @@ export function AppShell({
                   <X className="h-4 w-4" />
                 </button>
               </div>
-              <div className="grid grid-cols-3 gap-2">
-                {mobileMore.map((it) => {
-                  const Icon = it.icon;
-                  return (
-                    <Link
-                      key={it.id}
-                      to={it.to as "/"}
-                      onClick={() => setMoreOpen(false)}
-                      className="relative flex flex-col items-center gap-2 rounded-xl border border-border bg-card px-2 py-3 text-[11px] font-medium text-foreground transition hover:bg-secondary"
-                    >
-                      <Icon className="h-4 w-4 text-muted-foreground" />
-                      {it.label}
-                      {it.badge ? (
-                        <span className="absolute right-2 top-2 flex items-center justify-center min-w-[20px] h-[18px] px-1.5 rounded-[9px] text-[11px] font-medium tabular-nums bg-background dark:bg-white/[0.08] text-muted-foreground">
-                          {it.badge}
-                        </span>
-                      ) : null}
-                    </Link>
-                  );
-                })}
+              <div className="space-y-4">
+                {moreGroups.map((group) => (
+                  <section key={group.id}>
+                    <div className="mb-1.5 px-1 text-[10px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
+                      {group.title}
+                    </div>
+                    <div className="grid grid-cols-3 gap-2">
+                      {group.items.map((it) => {
+                        const Icon = it.icon;
+                        const active = isActive(it.to, it.exact);
+                        return (
+                          <Link
+                            key={it.id}
+                            to={it.to as "/"}
+                            onClick={() => setMoreOpen(false)}
+                            className={`relative flex flex-col items-center gap-2 rounded-xl border px-2 py-3 text-[11px] font-medium transition ${
+                              active
+                                ? "border-primary/40 bg-primary-soft text-primary"
+                                : "border-border bg-card text-foreground hover:bg-secondary"
+                            }`}
+                          >
+                            <Icon
+                              className={`h-4 w-4 ${active ? "text-primary" : "text-muted-foreground"}`}
+                            />
+                            {it.label}
+                            {it.badge ? (
+                              <span className="absolute right-2 top-2 flex items-center justify-center min-w-[20px] h-[18px] px-1.5 rounded-[9px] text-[11px] font-medium tabular-nums bg-background dark:bg-white/[0.08] text-muted-foreground">
+                                {it.badge}
+                              </span>
+                            ) : null}
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </section>
+                ))}
               </div>
               <div className="mt-4 pb-6">
                 <div className="mb-2 px-1 text-[10px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
