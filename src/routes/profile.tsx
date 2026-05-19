@@ -12,6 +12,7 @@ import {
   User as UserIcon,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
+import { useStateParam, presets as statePresets, RouteStatePage, RouteSkeleton } from "@/components/route-state";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
