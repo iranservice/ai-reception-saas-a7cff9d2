@@ -41,6 +41,22 @@ function AISettingsPage() {
   const [sourceReview, setSourceReview] = useState(true);
   const [escalateUnsure, setEscalateUnsure] = useState(true);
 
+  if (stateOverride === "ai-unavailable") {
+    return <RouteStatePage title="AI Assistance Settings">{statePresets.aiUnavailable()}</RouteStatePage>;
+  }
+  if (stateOverride === "access-denied") {
+    return <RouteStatePage title="AI Assistance Settings">{statePresets.aiAccessDenied()}</RouteStatePage>;
+  }
+  if (stateOverride === "loading") {
+    return (
+      <RouteStatePage title="AI Assistance Settings" description="Loading…">
+        <RouteSkeleton variant="settings" />
+      </RouteStatePage>
+    );
+  }
+
+
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 lg:px-8 space-y-6">
       <PageHeader
