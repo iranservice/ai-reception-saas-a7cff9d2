@@ -72,6 +72,8 @@ function AuditPage() {
       return true;
     });
   }, [actorType, result, actionFilter, workspace, query]);
+  const [mobileDetailOpen, setMobileDetailOpen] = useState(false);
+
 
   const selected = filtered.find((e) => e.id === selectedId) ?? filtered[0] ?? null;
 
