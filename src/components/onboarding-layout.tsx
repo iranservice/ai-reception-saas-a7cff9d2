@@ -5,7 +5,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-export const ONBOARDING_STEPS = [
+const ONBOARDING_STEPS = [
   { id: "workspace", label: "Workspace", path: "/onboarding/workspace" as const },
   { id: "profile", label: "Profile", path: "/onboarding/profile" as const },
   { id: "channel", label: "Channel", path: "/onboarding/channel" as const },
