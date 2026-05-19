@@ -154,7 +154,7 @@ export function AppShell({
 }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const mobilePrimary = mobilePrimaryItems();
-  const mobileMore = mobileMoreItems();
+  const moreGroups = mobileMoreGroups();
 
   const isInbox = (path: string) => path === "/inbox" || path.startsWith("/inbox/");
 
