@@ -94,9 +94,31 @@ function buildRows(): Row[] {
 }
 
 function CustomersPage() {
+  const stateOverride = useStateParam();
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | InboxStatus>("all");
   const [channelFilter, setChannelFilter] = useState<"all" | Channel>("all");
+
+  if (stateOverride === "empty") {
+    return (
+      <RouteStatePage title="Customers" description="Reception directory.">
+        {statePresets.customersEmpty()}
+      </RouteStatePage>
+    );
+  }
+  if (stateOverride === "access-denied") {
+    return (
+      <RouteStatePage title="Customers">{statePresets.customersAccessDenied()}</RouteStatePage>
+    );
+  }
+  if (stateOverride === "loading") {
+    return (
+      <RouteStatePage title="Customers" description="Loading customers…">
+        <RouteSkeleton variant="table" />
+      </RouteStatePage>
+    );
+  }
+
 
   const rows = useMemo(buildRows, []);
   const filtered = useMemo(() => {
