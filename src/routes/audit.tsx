@@ -83,9 +83,36 @@ function AuditPage() {
 
   const selected = filtered.find((e) => e.id === selectedId) ?? filtered[0] ?? null;
 
+  const stateOverride = useStateParam();
+  if (stateOverride === "empty") {
+    return (
+      <RouteStatePage title="Audit log" description="Workspace activity & security events.">
+        {statePresets.auditEmpty()}
+      </RouteStatePage>
+    );
+  }
+  if (stateOverride === "access-denied") {
+    return (
+      <RouteStatePage title="Audit log">{statePresets.auditAccessDenied()}</RouteStatePage>
+    );
+  }
+  if (stateOverride === "error") {
+    return (
+      <RouteStatePage title="Audit log">{statePresets.auditError()}</RouteStatePage>
+    );
+  }
+  if (stateOverride === "loading") {
+    return (
+      <RouteStatePage title="Audit log" description="Loading audit events…">
+        <RouteSkeleton variant="table" />
+      </RouteStatePage>
+    );
+  }
+
   return (
     <>
       <div className="mx-auto max-w-7xl px-4 py-8 lg:px-8 space-y-6">
+
         <PageHeader
           title="Audit log"
           description="A trustworthy record of who did what, where, and what the server allowed."
