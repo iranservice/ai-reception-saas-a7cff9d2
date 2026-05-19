@@ -54,6 +54,17 @@ const futureIntegrations = [
 ];
 
 function SettingsPage() {
+  const stateOverride = useStateParam();
+  if (stateOverride === "access-denied") {
+    return <RouteStatePage title="Settings">{statePresets.settingsAccessDenied()}</RouteStatePage>;
+  }
+  if (stateOverride === "loading") {
+    return (
+      <RouteStatePage title="Settings" description="Loading settings…">
+        <RouteSkeleton variant="settings" />
+      </RouteStatePage>
+    );
+  }
   return (
     <>
       <div className="mx-auto max-w-6xl px-4 py-8 lg:px-8 space-y-6">
