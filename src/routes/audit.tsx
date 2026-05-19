@@ -24,6 +24,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { EmptyAuditState } from "@/components/empty-states";
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 
 export const Route = createFileRoute("/audit")({
   head: () => ({
@@ -71,6 +72,8 @@ function AuditPage() {
       return true;
     });
   }, [actorType, result, actionFilter, workspace, query]);
+  const [mobileDetailOpen, setMobileDetailOpen] = useState(false);
+
 
   const selected = filtered.find((e) => e.id === selectedId) ?? filtered[0] ?? null;
 
@@ -184,7 +187,10 @@ function AuditPage() {
               {filtered.map((e) => (
                 <li key={e.id}>
                   <button
-                    onClick={() => setSelectedId(e.id)}
+                    onClick={() => {
+                      setSelectedId(e.id);
+                      setMobileDetailOpen(true);
+                    }}
                     className={`flex w-full items-start gap-3 px-4 py-4 text-left transition ${
                       selected?.id === e.id ? "bg-primary-soft/30" : "hover:bg-surface-muted/60"
                     }`}
@@ -198,11 +204,12 @@ function AuditPage() {
                       <div className="mt-1 truncate text-[12px] text-muted-foreground">
                         {e.actionLabel} · {e.target}
                       </div>
-                      <div className="mt-2 flex items-center gap-2">
+                      <div className="mt-1 truncate text-[11px] text-muted-foreground">
+                        {e.workspace} · {e.actorType}
+                      </div>
+                      <div className="mt-2 flex items-center justify-between gap-2">
                         <ResultBadge result={e.result} />
-                        <span className="rounded-md border border-border bg-surface px-2 py-1 text-[10px] font-medium text-muted-foreground">
-                          {e.workspace}
-                        </span>
+                        <span className="text-[11px] font-medium text-primary">View details →</span>
                       </div>
                     </div>
                   </button>
@@ -215,13 +222,14 @@ function AuditPage() {
               )}
             </ul>
 
+
             <div className="border-t border-border bg-surface-muted/40 px-4 py-2 text-[11px] text-muted-foreground">
               Showing {filtered.length} of {auditEvents.length} mock events · Retention is a planned capability.
             </div>
           </div>
 
-          {/* Detail panel */}
-          <aside className="lg:sticky lg:top-6 lg:self-start">
+          {/* Detail panel — tablet & desktop */}
+          <aside className="hidden sm:block lg:sticky lg:top-6 lg:self-start">
             {selected ? (
               <DetailPanel event={selected} onClose={() => setSelectedId(null)} />
             ) : (
@@ -232,6 +240,17 @@ function AuditPage() {
           </aside>
         </div>
       </div>
+
+      {/* Mobile detail sheet */}
+      <Sheet open={mobileDetailOpen} onOpenChange={setMobileDetailOpen}>
+        <SheetContent side="bottom" className="h-[85vh] overflow-y-auto p-0 sm:hidden">
+          <SheetTitle className="sr-only">Audit event details</SheetTitle>
+          {selected && (
+            <DetailPanel event={selected} onClose={() => setMobileDetailOpen(false)} />
+          )}
+        </SheetContent>
+      </Sheet>
+
     </>
   );
 }
