@@ -255,9 +255,32 @@ const CHANNELS: Record<string, ChannelDetail> = {
 function ChannelDetailPage() {
   const { channelId } = Route.useParams();
   const channel = CHANNELS[channelId];
+  const stateOverride = useStateParam();
 
   if (!channel) {
     return <UnknownChannel id={channelId} />;
+  }
+
+  if (stateOverride === "provider-unavailable") {
+    return (
+      <RouteStatePage title={channel.name}>
+        {statePresets.channelDetailProviderUnavailable()}
+      </RouteStatePage>
+    );
+  }
+  if (stateOverride === "planned") {
+    return (
+      <RouteStatePage title={channel.name}>
+        {statePresets.channelPlanned()}
+      </RouteStatePage>
+    );
+  }
+  if (stateOverride === "loading") {
+    return (
+      <RouteStatePage title={channel.name} description="Loading setup…">
+        <RouteSkeleton variant="settings" />
+      </RouteStatePage>
+    );
   }
 
   return (
@@ -265,6 +288,7 @@ function ChannelDetailPage() {
       <BackLink />
       <Header channel={channel} />
       <MockBanner />
+
 
       {channel.id === "web-chat" ? (
         <WebChatBody channel={channel} />
