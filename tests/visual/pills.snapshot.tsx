@@ -36,13 +36,29 @@ const BREAKPOINTS = [
 ] as const;
 
 const PILL_VARIANTS: PillVariant[] = [
-  "info", "success", "warn", "destructive", "primary", "ai", "operator", "muted", "neutral",
+  "info",
+  "success",
+  "warn",
+  "destructive",
+  "primary",
+  "ai",
+  "operator",
+  "muted",
+  "neutral",
 ];
 const PILL_APPEARANCES: PillAppearance[] = ["soft", "solid"];
 
 const CHIP_STATES = [
-  "new", "open", "waiting", "closed", "needs-review",
-  "follow-up", "urgent", "active", "access-denied", "future",
+  "new",
+  "open",
+  "waiting",
+  "closed",
+  "needs-review",
+  "follow-up",
+  "urgent",
+  "active",
+  "access-denied",
+  "future",
 ] as const;
 
 const CHANNEL_STATES: ChannelState[] = ["active", "connecting", "planned", "not_connected"];
@@ -54,7 +70,11 @@ function buildSamples() {
     for (const a of PILL_APPEARANCES) {
       out.push({
         id: `pill/${v}/${a}`,
-        node: <Pill variant={v} appearance={a}>{v}</Pill>,
+        node: (
+          <Pill variant={v} appearance={a}>
+            {v}
+          </Pill>
+        ),
       });
     }
   }
@@ -81,8 +101,15 @@ function buildSamples() {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const CONTRAST_COLORS = [
-  "info", "success", "warning", "warn", "destructive",
-  "primary", "ai", "attention", "operator",
+  "info",
+  "success",
+  "warning",
+  "warn",
+  "destructive",
+  "primary",
+  "ai",
+  "attention",
+  "operator",
 ];
 
 function findContrastViolations(html: string): string[] {
@@ -130,7 +157,12 @@ const SNAP_FILE = join(SNAP_DIR, "pills.snap.json");
 
 type SnapRecord = Record<string, string>;
 
-function render(): { snap: SnapRecord; bpDrift: string[]; contrast: Record<string, string[]>; responsive: Record<string, string[]> } {
+function render(): {
+  snap: SnapRecord;
+  bpDrift: string[];
+  contrast: Record<string, string[]>;
+  responsive: Record<string, string[]>;
+} {
   const samples = buildSamples();
   const snap: SnapRecord = {};
   const bpDrift: string[] = [];
@@ -183,7 +215,9 @@ function main() {
   }
   if (Object.keys(contrast).length) {
     failures.push(
-      `Golden Contrast Rule: ${Object.keys(contrast).length} violation(s) (bg-{c}/N + text-{c}):\n  - ${Object.entries(contrast)
+      `Golden Contrast Rule: ${Object.keys(contrast).length} violation(s) (bg-{c}/N + text-{c}):\n  - ${Object.entries(
+        contrast,
+      )
         .map(([k, v]) => `${k}: ${v.join(", ")}`)
         .join("\n  - ")}`,
     );
@@ -205,7 +239,8 @@ function main() {
     const prev = JSON.parse(readFileSync(SNAP_FILE, "utf8")) as SnapRecord;
     const diffs: string[] = [];
     for (const k of new Set([...Object.keys(prev), ...Object.keys(snap)])) {
-      if (prev[k] !== snap[k]) diffs.push(`  ${k}\n    - ${prev[k] ?? "<missing>"}\n    + ${snap[k] ?? "<missing>"}`);
+      if (prev[k] !== snap[k])
+        diffs.push(`  ${k}\n    - ${prev[k] ?? "<missing>"}\n    + ${snap[k] ?? "<missing>"}`);
     }
     if (diffs.length) {
       failures.push(`Snapshot drift (${diffs.length}):\n${diffs.join("\n")}`);

@@ -25,14 +25,14 @@ const SHOT_DIR = join(__dirname, "__screenshots__");
 const DIFF_DIR = join(__dirname, "__diffs__");
 
 const BREAKPOINTS = [
-  { name: "mobile",  width: 375,  height: 900 },
-  { name: "tablet",  width: 820,  height: 900 },
+  { name: "mobile", width: 375, height: 900 },
+  { name: "tablet", width: 820, height: 900 },
   { name: "desktop", width: 1280, height: 900 },
 ] as const;
 
 const UPDATE = process.argv.includes("--update");
-const THRESHOLD = 0.1;        // per-pixel color tolerance (pixelmatch)
-const MAX_DIFF_PIXELS = 5;    // anti-aliasing slack per crop
+const THRESHOLD = 0.1; // per-pixel color tolerance (pixelmatch)
+const MAX_DIFF_PIXELS = 5; // anti-aliasing slack per crop
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Dev server boot
@@ -47,7 +47,11 @@ async function ensureGallery(): Promise<{ url: string; stop: () => void }> {
   const proc: ChildProcess = spawn(
     "bunx",
     ["vite", "dev", "--port", String(port), "--strictPort", "--host", "127.0.0.1"],
-    { cwd: ROOT, stdio: ["ignore", "pipe", "pipe"], env: { ...process.env, NODE_ENV: "development" } },
+    {
+      cwd: ROOT,
+      stdio: ["ignore", "pipe", "pipe"],
+      env: { ...process.env, NODE_ENV: "development" },
+    },
   );
   proc.stdout?.on("data", () => {});
   proc.stderr?.on("data", () => {});
@@ -58,7 +62,9 @@ async function ensureGallery(): Promise<{ url: string; stop: () => void }> {
     try {
       const r = await fetch(url);
       if (r.ok) return { url, stop: () => proc.kill("SIGTERM") };
-    } catch { /* not yet */ }
+    } catch {
+      /* not yet */
+    }
     await new Promise((r) => setTimeout(r, 500));
   }
   proc.kill("SIGTERM");
@@ -72,7 +78,7 @@ async function ensureGallery(): Promise<{ url: string; stop: () => void }> {
 async function captureBreakpoint(
   browser: Browser,
   url: string,
-  bp: typeof BREAKPOINTS[number],
+  bp: (typeof BREAKPOINTS)[number],
 ): Promise<Map<string, Buffer>> {
   const context = await browser.newContext({
     viewport: { width: bp.width, height: bp.height },
@@ -95,7 +101,9 @@ async function captureBreakpoint(
   await page.addStyleTag({ content: KILL_MOTION });
   await page.evaluate(() => document.fonts?.ready);
   // Let one frame pass so the style applies before we snapshot.
-  await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => r(null)))));
+  await page.evaluate(
+    () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => r(null)))),
+  );
 
   const ids: string[] = await page.$$eval("[data-pill-id]", (els) =>
     (els as HTMLElement[]).map((e) => e.getAttribute("data-pill-id") || ""),
@@ -112,7 +120,9 @@ async function captureBreakpoint(
   return out;
 }
 
-function loadPng(buf: Buffer): PNG { return PNG.sync.read(buf); }
+function loadPng(buf: Buffer): PNG {
+  return PNG.sync.read(buf);
+}
 
 function diff(a: PNG, b: PNG): { mismatch: number; diffPng: PNG | null } {
   if (a.width !== b.width || a.height !== b.height) {
@@ -174,7 +184,9 @@ async function main() {
           const actualPath = join(bpDiff, `${safe}.actual.png`);
           writeFileSync(actualPath, buf);
           if (diffPng) writeFileSync(diffPath, PNG.sync.write(diffPng));
-          failures.push(`  ${bp.name}/${id}: ${mismatch === Infinity ? "size mismatch" : `${mismatch}px differ`} → ${diffPath}`);
+          failures.push(
+            `  ${bp.name}/${id}: ${mismatch === Infinity ? "size mismatch" : `${mismatch}px differ`} → ${diffPath}`,
+          );
         } else {
           matched++;
         }
@@ -186,16 +198,24 @@ async function main() {
   }
 
   const goldenCount = BREAKPOINTS.reduce(
-    (n, bp) => n + (existsSync(join(SHOT_DIR, bp.name)) ? readdirSync(join(SHOT_DIR, bp.name)).length : 0),
+    (n, bp) =>
+      n + (existsSync(join(SHOT_DIR, bp.name)) ? readdirSync(join(SHOT_DIR, bp.name)).length : 0),
     0,
   );
-  console.log(`  captured ${captured}, matched ${matched}, written ${written}, goldens on disk ${goldenCount}`);
+  console.log(
+    `  captured ${captured}, matched ${matched}, written ${written}, goldens on disk ${goldenCount}`,
+  );
 
   if (failures.length) {
-    console.error(`\n✗ ${failures.length} pixel-diff mismatch(es):\n${failures.join("\n")}\n\nReview the diffs, then run \`bun run snapshot:pixels:update\` to accept.`);
+    console.error(
+      `\n✗ ${failures.length} pixel-diff mismatch(es):\n${failures.join("\n")}\n\nReview the diffs, then run \`bun run snapshot:pixels:update\` to accept.`,
+    );
     process.exit(1);
   }
   console.log(UPDATE ? "✓ goldens updated" : "✓ all screenshots match");
 }
 
-main().catch((e) => { console.error(e); process.exit(1); });
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});
