@@ -153,9 +153,31 @@ function InboxPage() {
   const [contextOpen, setContextOpen] = useState(false);
   const [sectionsOpen, setSectionsOpen] = useState(false);
   const [queueMenuOpen, setQueueMenuOpen] = useState(false);
+  const stateOverride = useStateParam();
 
-  const filtered = useMemo(() => {
-    return conversations.filter((c) => {
+  if (stateOverride === "empty") {
+    return (
+      <RouteStatePage title="Inbox" description="Operator inbox with AI drafts and human review.">
+        {statePresets.inboxEmpty()}
+      </RouteStatePage>
+    );
+  }
+  if (stateOverride === "access-denied") {
+    return (
+      <RouteStatePage title="Inbox">{statePresets.inboxAccessDenied()}</RouteStatePage>
+    );
+  }
+  if (stateOverride === "loading") {
+    return (
+      <RouteStatePage title="Inbox" description="Loading conversations…">
+        <div className="grid gap-4 md:grid-cols-[360px_minmax(0,1fr)]">
+          <RouteSkeleton variant="list" />
+          <RouteSkeleton variant="settings" />
+        </div>
+      </RouteStatePage>
+    );
+  }
+
       let matchSection = true;
       if (section.kind === "inbox") {
         switch (section.value) {
