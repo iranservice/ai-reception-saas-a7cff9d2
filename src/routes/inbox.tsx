@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { PageHeader } from "@/components/ui-bits";
 import { useBusinessId } from "@/contexts/business-context";
@@ -13,14 +13,7 @@ import {
   RouteSkeleton,
   StateBanner,
 } from "@/components/route-state";
-import {
-  Inbox as InboxIcon,
-  Plus,
-  ChevronRight,
-  Loader2,
-  AlertTriangle,
-  RefreshCw,
-} from "lucide-react";
+import { Plus, AlertTriangle, RefreshCw } from "lucide-react";
 
 // ---------------------------------------------------------------------------
 // Route definition
@@ -93,19 +86,15 @@ function InboxPage() {
   const stateOverride = useStateParam();
   const businessId = useBusinessId();
   const [statusFilter, setStatusFilter] = useState<StatusFilterValue>("all");
-  const [cursor, setCursor] = useState<string | undefined>(undefined);
 
   // Resolve filters
+  // Cursor pagination is deferred to R3B-2B.
   const filters = {
     status: statusFilter === "all" ? undefined : statusFilter,
     limit: 25,
-    cursor,
   };
 
-  const { data, isLoading, isError, error, isFetching, refetch } = useConversations(
-    businessId,
-    filters,
-  );
+  const { data, isLoading, isError, error, refetch } = useConversations(businessId, filters);
 
   // ── State override support ──────────────────────────────────────────────
   if (stateOverride === "empty") {
@@ -150,13 +139,7 @@ function InboxPage() {
     return (
       <div className="mx-auto max-w-6xl px-4 py-8 lg:px-8 space-y-6">
         <PageHeader title="Inbox" description="Operator inbox — manage customer conversations." />
-        <StatusFilterBar
-          value={statusFilter}
-          onChange={(v) => {
-            setStatusFilter(v);
-            setCursor(undefined);
-          }}
-        />
+        <StatusFilterBar value={statusFilter} onChange={setStatusFilter} />
         <LoadingSkeleton variant="conversation-list" count={6} />
       </div>
     );
@@ -211,9 +194,8 @@ function InboxPage() {
 
   // ── Data loaded ─────────────────────────────────────────────────────────
   const conversations = data?.data ?? [];
-  const nextCursor = data?.nextCursor;
-  const isEmpty = conversations.length === 0 && !cursor;
-  const isFilterEmpty = conversations.length === 0 && statusFilter !== "all";
+  const isEmpty = conversations.length === 0;
+  const isFilterEmpty = isEmpty && statusFilter !== "all";
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 lg:px-8 space-y-6">
@@ -231,61 +213,26 @@ function InboxPage() {
         }
       />
 
-      <StatusFilterBar
-        value={statusFilter}
-        onChange={(v) => {
-          setStatusFilter(v);
-          setCursor(undefined);
-        }}
-      />
+      <StatusFilterBar value={statusFilter} onChange={setStatusFilter} />
 
       {/* Empty state — no conversations at all */}
       {isEmpty && !isFilterEmpty && <InboxOperatorFirstEmpty />}
 
       {/* Empty state — filter returned nothing */}
       {isFilterEmpty && (
-        <FilterNoMatchState
-          label="conversations"
-          onReset={() => {
-            setStatusFilter("all");
-            setCursor(undefined);
-          }}
-        />
+        <FilterNoMatchState label="conversations" onReset={() => setStatusFilter("all")} />
       )}
 
       {/* Conversation list */}
       {conversations.length > 0 && (
         <div className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card shadow-soft">
           {conversations.map((c) => (
-            <ConversationRow key={c.id} conversation={c} businessId={businessId} />
+            <ConversationRow key={c.id} conversation={c} />
           ))}
         </div>
       )}
 
-      {/* Load more / pagination */}
-      {nextCursor && (
-        <div className="flex justify-center pt-2">
-          <button
-            onClick={() => setCursor(nextCursor)}
-            disabled={isFetching}
-            className="inline-flex items-center gap-2 rounded-lg border border-border bg-surface px-4 py-2 text-xs font-medium text-foreground hover:bg-secondary transition-colors disabled:opacity-50"
-          >
-            {isFetching ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            ) : (
-              <ChevronRight className="h-3.5 w-3.5" />
-            )}
-            Load more conversations
-          </button>
-        </div>
-      )}
-
-      {/* Fetching indicator (when loading more) */}
-      {isFetching && !isLoading && (
-        <div className="flex justify-center py-2">
-          <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-        </div>
-      )}
+      {/* Cursor pagination is deferred to R3B-2B. */}
     </div>
   );
 }
@@ -327,23 +274,14 @@ function StatusFilterBar({
 // Conversation row
 // ---------------------------------------------------------------------------
 
-function ConversationRow({
-  conversation: c,
-  businessId: _businessId,
-}: {
-  conversation: ConversationWithSummary;
-  businessId: string;
-}) {
+function ConversationRow({ conversation: c }: { conversation: ConversationWithSummary }) {
   const statusTone = STATUS_TONE[c.status] ?? "bg-muted text-muted-foreground border-border";
   const statusLabel = STATUS_LABEL[c.status] ?? c.status;
   const channelLabel = CHANNEL_LABEL[c.channel] ?? c.channel;
   const updatedAt = formatRelativeTime(c.updatedAt ?? c.createdAt);
 
   return (
-    <Link
-      to="/inbox"
-      className="flex items-center gap-3 px-4 py-3.5 hover:bg-surface-muted transition-colors group"
-    >
+    <article className="flex items-center gap-3 px-4 py-3.5">
       {/* Status indicator dot */}
       <div className="flex flex-col items-center gap-1 shrink-0">
         <div
@@ -383,10 +321,7 @@ function ConversationRow({
           <span className="shrink-0 tabular-nums">{updatedAt}</span>
         </div>
       </div>
-
-      {/* Arrow */}
-      <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-    </Link>
+    </article>
   );
 }
 
