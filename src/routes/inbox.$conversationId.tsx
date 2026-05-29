@@ -135,6 +135,7 @@ function ConversationDetailPage() {
     data: messagesData,
     isLoading: msgsLoading,
     isError: msgsError,
+    error: msgsErr,
     refetch: refetchMsgs,
   } = useMessages(businessId, conversationId, { limit: 50 });
 
@@ -251,6 +252,29 @@ function ConversationDetailPage() {
 
   // ── Error state — messages ─────────────────────────────────────────────
   if (msgsError) {
+    const apiErr = msgsErr as
+      | {
+          isUnauthenticated?: boolean;
+          isForbidden?: boolean;
+        }
+      | undefined;
+
+    if (apiErr?.isUnauthenticated) {
+      return (
+        <RouteStatePage title="Conversation" description="Conversation detail">
+          {statePresets.profileSessionExpired()}
+        </RouteStatePage>
+      );
+    }
+
+    if (apiErr?.isForbidden) {
+      return (
+        <RouteStatePage title="Conversation" description="Conversation detail">
+          {statePresets.inboxAccessDenied()}
+        </RouteStatePage>
+      );
+    }
+
     return (
       <div className="mx-auto max-w-4xl px-4 py-8 lg:px-8 space-y-6">
         <BackLink />
