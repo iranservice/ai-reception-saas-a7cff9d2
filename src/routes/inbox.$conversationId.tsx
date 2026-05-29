@@ -507,15 +507,19 @@ function MessageComposer({
   function handleSubmit() {
     if (!canSubmit) return;
 
+    // Capture submitted direction before mutate — mode may change during pending
+    const submittedDirection = config.direction;
+    const successMessage = submittedDirection === "OUTBOUND" ? "Reply sent" : "Note added";
+
     createMessage.mutate(
       {
         content: trimmed,
-        direction: config.direction,
+        direction: submittedDirection,
       },
       {
         onSuccess: () => {
           setContent("");
-          toast.success(mode === "OUTBOUND" ? "Reply sent" : "Note added");
+          toast.success(successMessage);
         },
         onError: (error) => {
           // Keep content — don't lose the user's draft
@@ -555,7 +559,8 @@ function MessageComposer({
         <button
           type="button"
           onClick={() => setMode("OUTBOUND")}
-          className={`${REPLY_MODE.tabCls} ${mode === "OUTBOUND" ? REPLY_MODE.activeTabCls : INACTIVE_TAB_CLS}`}
+          disabled={createMessage.isPending}
+          className={`${REPLY_MODE.tabCls} disabled:opacity-50 disabled:cursor-not-allowed ${mode === "OUTBOUND" ? REPLY_MODE.activeTabCls : INACTIVE_TAB_CLS}`}
         >
           <Send className="h-3 w-3" />
           Reply
@@ -563,7 +568,8 @@ function MessageComposer({
         <button
           type="button"
           onClick={() => setMode("INTERNAL")}
-          className={`${NOTE_MODE.tabCls} ${mode === "INTERNAL" ? NOTE_MODE.activeTabCls : INACTIVE_TAB_CLS}`}
+          disabled={createMessage.isPending}
+          className={`${NOTE_MODE.tabCls} disabled:opacity-50 disabled:cursor-not-allowed ${mode === "INTERNAL" ? NOTE_MODE.activeTabCls : INACTIVE_TAB_CLS}`}
         >
           <Lock className="h-3 w-3" />
           Note
