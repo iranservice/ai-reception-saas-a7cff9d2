@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useEffect, useCallback } from "react";
-import { keepPreviousData } from "@tanstack/react-query";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { PageHeader } from "@/components/ui-bits";
 import { useBusinessId } from "@/contexts/business-context";
 import { useConversations } from "@/hooks/use-conversations";
@@ -106,6 +105,7 @@ function InboxPage() {
   // Pagination accumulation
   const [pages, setPages] = useState<ConversationWithSummary[]>([]);
   const [cursor, setCursor] = useState<string | undefined>();
+  const lastKnownNextCursor = useRef<string | null>(null);
 
   // Resolve filters for API call
   const filters = {
@@ -118,21 +118,30 @@ function InboxPage() {
   const { data, isLoading, isError, error, isFetching, refetch } = useConversations(
     businessId,
     filters,
-    { placeholderData: keepPreviousData },
   );
 
-  // Accumulate pages when data arrives
+  // Accumulate pages when data arrives — dedup guard prevents duplicate rows
+  const dataItems = data?.data;
   useEffect(() => {
-    if (data?.data) {
-      if (!cursor) {
-        // First page or filter reset — replace
-        setPages(data.data);
-      } else {
-        // Subsequent page — append
-        setPages((prev) => [...prev, ...data.data]);
-      }
+    if (!dataItems) return;
+
+    if (!cursor) {
+      // First page or filter reset — replace
+      setPages(dataItems);
+    } else {
+      // Subsequent page — append with dedup guard
+      setPages((prev) => {
+        const seen = new Set(prev.map((item) => item.id));
+        const nextItems = dataItems.filter((item) => !seen.has(item.id));
+        return [...prev, ...nextItems];
+      });
     }
-  }, [data, cursor]);
+  }, [dataItems, cursor]);
+
+  // Track nextCursor so Load More button persists during fetch
+  if (data?.nextCursor !== undefined) {
+    lastKnownNextCursor.current = data.nextCursor;
+  }
 
   // Reset filters, cursor, and accumulated pages
   const resetFilters = useCallback(() => {
@@ -140,25 +149,32 @@ function InboxPage() {
     setChannelFilter("all");
     setCursor(undefined);
     setPages([]);
+    lastKnownNextCursor.current = null;
   }, []);
 
   const handleStatusChange = useCallback((v: StatusFilterValue) => {
     setStatusFilter(v);
     setCursor(undefined);
     setPages([]);
+    lastKnownNextCursor.current = null;
   }, []);
 
   const handleChannelChange = useCallback((v: ChannelFilterValue) => {
     setChannelFilter(v);
     setCursor(undefined);
     setPages([]);
+    lastKnownNextCursor.current = null;
   }, []);
 
   const handleLoadMore = useCallback(() => {
-    if (data?.nextCursor) {
-      setCursor(data.nextCursor);
+    const next = data?.nextCursor ?? lastKnownNextCursor.current;
+    if (next) {
+      setCursor(next);
     }
   }, [data?.nextCursor]);
+
+  // Show loading skeleton only on initial load with no accumulated pages
+  const isInitialLoading = isLoading && pages.length === 0;
 
   // ── State override support ──────────────────────────────────────────────
   if (stateOverride === "empty") {
@@ -198,8 +214,8 @@ function InboxPage() {
     );
   }
 
-  // ── Loading state (initial only) ───────────────────────────────────────
-  if (isLoading) {
+  // ── Loading state (initial only — no accumulated pages yet) ─────────────
+  if (isInitialLoading) {
     return (
       <div className="mx-auto max-w-6xl px-4 py-8 lg:px-8 space-y-6">
         <PageHeader title="Inbox" description="Operator inbox — manage customer conversations." />
@@ -263,7 +279,8 @@ function InboxPage() {
 
   // ── Data loaded ─────────────────────────────────────────────────────────
   const conversations = pages.length > 0 ? pages : (data?.data ?? []);
-  const nextCursor = data?.nextCursor;
+  const showLoadMore =
+    data?.nextCursor ?? (isFetching && cursor ? lastKnownNextCursor.current : null);
   const isEmpty = conversations.length === 0;
   const hasActiveFilter = statusFilter !== "all" || channelFilter !== "all";
   const isFilterEmpty = isEmpty && hasActiveFilter;
@@ -308,7 +325,7 @@ function InboxPage() {
       )}
 
       {/* Load more pagination */}
-      {nextCursor && (
+      {showLoadMore && (
         <div className="flex justify-center pt-2">
           <button
             onClick={handleLoadMore}
@@ -322,13 +339,6 @@ function InboxPage() {
             )}
             Load more conversations
           </button>
-        </div>
-      )}
-
-      {/* Fetching indicator (when loading more) */}
-      {isFetching && !isLoading && !nextCursor && (
-        <div className="flex justify-center py-2">
-          <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
         </div>
       )}
     </div>
