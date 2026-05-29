@@ -5,6 +5,7 @@ import {
   conversations,
   members,
   channelLabel,
+  type Customer,
   type InboxStatus,
   type Message,
 } from "@/lib/mock-data";
@@ -34,7 +35,7 @@ export const Route = createFileRoute("/customers/$customerId")({
       ],
     };
   },
-  loader: ({ params }) => {
+  loader: ({ params }): { customer: Customer } => {
     const customer = customers.find((c) => c.id === params.customerId);
     if (!customer) throw notFound();
     return { customer };
@@ -104,7 +105,11 @@ const mockNotesByCustomer: Record<
 };
 
 function CustomerProfilePage() {
-  const { customer } = Route.useLoaderData();
+  // useLoaderData() is only called when the loader returned successfully.
+  // Type assertion required: TanStack Router does not propagate the loader
+  // return type through useLoaderData() when the loader can throw notFound().
+  // The notFoundComponent handles the missing-customer case separately.
+  const { customer } = Route.useLoaderData() as { customer: Customer };
   const linked = conversations.filter((c) => c.customerId === customer.id);
   const notes = mockNotesByCustomer[customer.id] ?? [];
 
