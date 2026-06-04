@@ -7,7 +7,7 @@ import tseslint from "typescript-eslint";
 import localRules from "./eslint-rules/index.js";
 
 export default tseslint.config(
-  { ignores: ["dist", ".output", ".vinxi"] },
+  { ignores: ["dist", ".output", ".vinxi", ".vercel"] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],
