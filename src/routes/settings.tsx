@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader, MockBanner } from "@/components/ui-bits";
-import { useBusinessId } from "@/contexts/business-context";
-import { useBusiness } from "@/hooks/use-business";
+import { useBusinessContext } from "@/contexts/business-context";
 import {
   Mail,
   MessageSquare,
@@ -108,12 +107,14 @@ function statusDisplay(status: string) {
 }
 
 function SettingsPage() {
-  const businessId = useBusinessId();
   const {
-    data: business,
+    businessId,
+    businesses,
     isLoading: businessLoading,
     error: businessError,
-  } = useBusiness(businessId);
+  } = useBusinessContext();
+
+  const business = businesses.find((b) => b.id === businessId) ?? businesses[0];
 
   const stateOverride = useStateParam();
   if (stateOverride === "access-denied") {
