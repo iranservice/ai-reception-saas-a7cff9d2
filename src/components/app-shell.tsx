@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, Outlet, useRouterState } from "@tanstack/react-router";
+import { useBusinessContext } from "@/contexts/business-context";
 import {
   LayoutDashboard,
   Inbox,
@@ -22,11 +23,13 @@ import {
   Bot,
   MoreHorizontal,
   X,
+  Loader2,
+  Building2,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { NotificationCenter } from "@/components/notification-center";
 import { ProfileMenu } from "@/components/profile-menu";
-import { workspaces, type WorkspaceRole } from "@/lib/mock-data";
+import type { BusinessIdentity } from "@/lib/api-types";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 /* ───────────────────────── Single shared menu config ───────────────────────── */
@@ -122,14 +125,13 @@ const mobileMoreGroups = (): MoreGroup[] => {
 
 const STORAGE_KEY = "app.sidebar.collapsed";
 
-// Role tones follow the strict monday-style semantics — Owner=brand, Admin=info,
-// Operator=success, Viewer=neutral. Subtle ring-inset for premium chip feel.
-const roleTone: Record<WorkspaceRole, string> = {
-  Owner: "bg-primary-soft text-foreground ring-1 ring-inset ring-primary/25",
-  Admin: "bg-info/10 text-foreground ring-1 ring-inset ring-info/25",
-  Operator: "bg-success/10 text-foreground ring-1 ring-inset ring-success/25",
-  Viewer: "bg-secondary text-muted-foreground ring-1 ring-inset ring-border",
-};
+/** Derives up to two initials from a business name. Falls back to "AI". */
+function deriveInitials(name: string | undefined): string {
+  if (!name) return "AI";
+  const words = name.trim().split(/\s+/).filter(Boolean);
+  if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+  return (words[0][0] + words[1][0]).toUpperCase();
+}
 
 /* ───────────────────────── AppShell ───────────────────────── */
 
@@ -137,6 +139,17 @@ export function AppShell({ children }: { children?: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const mobilePrimary = mobilePrimaryItems();
   const moreGroups = mobileMoreGroups();
+  const {
+    businessId,
+    businesses,
+    isLoading: businessLoading,
+    isEmpty: noBusinesses,
+    error: businessError,
+  } = useBusinessContext();
+
+  const activeBusiness: BusinessIdentity | undefined =
+    businesses.find((b) => b.id === businessId) ?? businesses[0];
+  const initials = deriveInitials(activeBusiness?.name);
 
   const isInbox = (path: string) => path === "/inbox" || path.startsWith("/inbox/");
 
@@ -192,7 +205,12 @@ export function AppShell({ children }: { children?: React.ReactNode }) {
   return (
     <TooltipProvider delayDuration={150}>
       <div className="min-h-screen flex w-full bg-app text-foreground">
-        <SharedSidebar collapsed={collapsed} isActive={isActive} />
+        <SharedSidebar
+          collapsed={collapsed}
+          isActive={isActive}
+          activeBusiness={activeBusiness}
+          initials={initials}
+        />
 
         {/* Main */}
         <div data-sidebar-collapsed={collapsed} className="flex-1 flex min-w-0 flex-col">
@@ -241,7 +259,47 @@ export function AppShell({ children }: { children?: React.ReactNode }) {
             </div>
           </header>
 
-          <main className="flex-1 min-w-0 pb-16 md:pb-0">{children ?? <Outlet />}</main>
+          <main className="flex-1 min-w-0 pb-16 md:pb-0">
+            {businessLoading ? (
+              <div className="flex min-h-[60vh] items-center justify-center">
+                <div className="flex flex-col items-center gap-3">
+                  <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                  <p className="text-[13px] text-muted-foreground">Loading workspace…</p>
+                </div>
+              </div>
+            ) : businessError ? (
+              <div className="flex min-h-[60vh] items-center justify-center px-4">
+                <div className="max-w-sm text-center">
+                  <Building2 className="mx-auto h-10 w-10 text-muted-foreground/60" />
+                  <h2 className="mt-4 text-lg font-medium text-foreground">
+                    Workspace unavailable
+                  </h2>
+                  <p className="mt-2 text-[13px] text-muted-foreground">
+                    We couldn't load your workspaces. Please try refreshing the page.
+                  </p>
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="mt-4 inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                  >
+                    Refresh
+                  </button>
+                </div>
+              </div>
+            ) : noBusinesses ? (
+              <div className="flex min-h-[60vh] items-center justify-center px-4">
+                <div className="max-w-sm text-center">
+                  <Building2 className="mx-auto h-10 w-10 text-muted-foreground/60" />
+                  <h2 className="mt-4 text-lg font-medium text-foreground">No workspace</h2>
+                  <p className="mt-2 text-[13px] text-muted-foreground">
+                    You're not a member of any workspace yet. Ask your team admin for an invitation,
+                    or create a new workspace.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              (children ?? <Outlet />)
+            )}
+          </main>
         </div>
 
         {/* Mobile bottom nav */}
@@ -367,11 +425,16 @@ export function AppShell({ children }: { children?: React.ReactNode }) {
 function SharedSidebar({
   collapsed,
   isActive,
+  activeBusiness,
+  initials,
 }: {
   collapsed: boolean;
   isActive: (to: string, exact?: boolean) => boolean;
+  activeBusiness: BusinessIdentity | undefined;
+  initials: string;
 }) {
-  const ws = workspaces[0];
+  const name = activeBusiness?.name ?? "No workspace";
+  const status = activeBusiness?.status ?? "—";
 
   return (
     <aside
@@ -389,33 +452,22 @@ function SharedSidebar({
                 aria-label="Workspace"
                 className="relative mx-auto grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-primary to-[oklch(0.42_0.18_268)] text-primary-foreground font-medium text-sm shadow-ring-primary"
               >
-                {ws.initials}
-                <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-success ring-2 ring-sidebar" />
+                {initials}
               </button>
             </TooltipTrigger>
             <TooltipContent side="right" className="text-xs">
-              <div className="font-medium">{ws.name}</div>
-              <div className="text-[10px] text-muted-foreground">
-                {ws.role} · {ws.status}
-              </div>
+              <div className="font-medium">{name}</div>
+              <div className="text-[10px] text-muted-foreground">{status}</div>
             </TooltipContent>
           </Tooltip>
         ) : (
           <button className="flex h-14 w-full items-center gap-3 rounded-[10px] px-3 py-2 text-left transition hover:bg-sidebar-accent">
             <div className="relative grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-primary to-[oklch(0.42_0.18_268)] text-primary-foreground font-medium text-sm shadow-soft">
-              {ws.initials}
-              <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-success ring-2 ring-surface" />
+              {initials}
             </div>
             <div className="min-w-0 flex-1">
-              <div className="truncate text-[13px] font-medium leading-tight">{ws.name}</div>
-              <div className="mt-1 flex items-center gap-1 text-[10.5px] text-muted-foreground">
-                <Shield className="h-2.5 w-2.5" />
-                <span className={`rounded px-1 py-px text-[10px] font-medium ${roleTone[ws.role]}`}>
-                  {ws.role}
-                </span>
-                <span className="opacity-50">·</span>
-                <span>{ws.status}</span>
-              </div>
+              <div className="truncate text-[13px] font-medium leading-tight">{name}</div>
+              <div className="mt-1 text-[10.5px] text-muted-foreground">{status}</div>
             </div>
             <ChevronsUpDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
           </button>
