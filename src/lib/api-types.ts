@@ -445,7 +445,13 @@ export interface AuditEvent {
   createdAt: string; // ISO 8601
 }
 
-/** Filters for listing audit events (all optional, applied client-side) */
+/**
+ * Client-side UI filters for the audit events list.
+ * These are NOT the backend query params — they are applied locally on the
+ * fetched array. The backend supports: actorUserId, action, targetType,
+ * targetId, result, actorType, limit. This MVP fetches with limit=100
+ * and filters entirely client-side.
+ */
 export interface ListAuditEventsFilters {
   actorType?: AuditActorType;
   result?: AuditResult;

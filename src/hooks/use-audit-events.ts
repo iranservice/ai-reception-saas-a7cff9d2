@@ -6,10 +6,12 @@
  *
  * Fetching strategy:
  * - Fetches up to limit=100 events in a single request.
- * - All filter logic (actorType, result, dateRange, query) is applied
- *   client-side on the fetched array. This avoids re-fetching on every
- *   filter change and works safely when the API handler feature gate is
- *   off (501 is handled by the error boundary).
+ * - The backend also supports server-side filtering by actorUserId, action,
+ *   targetType, targetId, result, and actorType query params. This MVP
+ *   intentionally only sends limit=100 and applies all other filter logic
+ *   (actorType, result, dateRange, query) client-side on the fetched array.
+ *   This avoids re-fetching on every filter change and works safely when the
+ *   API handler feature gate is off (501 is handled by the error boundary).
  *
  * NOTE: AuditEventIdentity does NOT include actor display name or workspace
  * name. The GET /api/identity/users/:userId endpoint is currently a 501
