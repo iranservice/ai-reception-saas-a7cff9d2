@@ -2,14 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { MockBanner, PageHeader } from "@/components/ui-bits";
 import { ChannelIcon } from "@/components/channel-icon";
 import { ChannelStateTag } from "@/components/channel-state-tag";
-import type { ChannelState } from "@/lib/channels";
-import {
-  channelOverview,
-  type ChannelStatus,
-  type ChannelHealth,
-  type ChannelOverview,
-} from "@/lib/mock-data";
-import { ArrowUpRight, Inbox, Users, Clock, Activity, Info } from "lucide-react";
+import { CHANNELS, CHANNEL_ORDER, type ChannelKey, type ChannelState } from "@/lib/channels";
+import { ArrowUpRight, Inbox, Activity, Info, LayoutGrid } from "lucide-react";
 import {
   useStateParam,
   presets as statePresets,
@@ -30,47 +24,43 @@ export const Route = createFileRoute("/channels")({
   component: ChannelsPage,
 });
 
-const healthLabel: Record<ChannelHealth, string> = {
-  healthy: "Healthy (mock)",
-  degraded: "Degraded",
-  offline: "Offline",
-  "n/a": "Not connected",
+/**
+ * Maps ChannelKey (registry) → channelId URL segment used in channels.$channelId.tsx.
+ * The detail page uses slug-form IDs (web-chat, voice) rather than registry keys.
+ */
+const CHANNEL_ROUTE_ID: Record<ChannelKey, string> = {
+  web_chat: "web-chat",
+  email: "email",
+  instagram: "instagram",
+  whatsapp: "whatsapp",
+  telegram: "telegram",
+  facebook: "facebook",
+  sms: "sms",
+  call: "voice",
 };
 
-const healthDot: Record<ChannelHealth, string> = {
-  healthy: "bg-success",
-  degraded: "bg-warning",
-  offline: "bg-destructive",
-  "n/a": "bg-muted-foreground/40",
-};
-
-function statusToState(status: ChannelStatus): ChannelState {
+/**
+ * Maps roadmapStatus → ChannelState for <ChannelIcon> and <ChannelStateTag>.
+ * "future" is treated as not_connected (no adapter, no timeline).
+ */
+function roadmapToState(status: "active" | "planned" | "future"): ChannelState {
   switch (status) {
-    case "Mock Active":
+    case "active":
       return "active";
-    case "Planned":
+    case "planned":
       return "planned";
-    case "Future":
-    case "Not enabled in MVP":
+    case "future":
     default:
       return "not_connected";
   }
 }
 
-const ROUTE_ID: Record<string, string> = {
-  webchat: "web-chat",
-  email: "email",
-  instagram: "instagram",
-  whatsapp: "whatsapp",
-  telegram: "telegram",
-  sms: "sms",
-  facebook: "facebook",
-  voice: "voice",
-};
+function ChannelCard({ channelKey }: { channelKey: ChannelKey }) {
+  const c = CHANNELS[channelKey];
+  const isActive = c.roadmapStatus === "active";
+  const detailId = CHANNEL_ROUTE_ID[channelKey];
+  const state = roadmapToState(c.roadmapStatus);
 
-function ChannelCard({ c }: { c: ChannelOverview }) {
-  const isActive = c.status === "Mock Active";
-  const detailId = ROUTE_ID[c.key] ?? c.key;
   return (
     <div
       className={`group relative flex h-full min-w-[280px] flex-col p-5 transition ${
@@ -80,15 +70,15 @@ function ChannelCard({ c }: { c: ChannelOverview }) {
       }`}
     >
       <div className="flex items-start justify-between gap-3">
-        <ChannelIcon channel={c.key} size="lg" state={statusToState(c.status)} />
-        <ChannelStateTag state={statusToState(c.status)} />
+        <ChannelIcon channel={channelKey} size="lg" state={state} />
+        <ChannelStateTag state={state} />
       </div>
       <h3
         className={`mt-4 text-base tracking-tight ${
           isActive ? "font-medium" : "font-medium text-[color:var(--text-secondary)]"
         }`}
       >
-        {c.name}
+        {c.label}
       </h3>
       <p
         className={`mt-1 line-clamp-2 text-xs ${
@@ -98,29 +88,8 @@ function ChannelCard({ c }: { c: ChannelOverview }) {
         {c.description}
       </p>
 
-      <div className="mt-4 grid grid-cols-3 gap-2">
-        <Stat label="Unread" value={c.unread} highlight={c.unread > 0} muted={!isActive} />
-        <Stat label="Customers" value={c.customers} muted={!isActive} />
-        <Stat label="Waiting" value={c.waiting} highlight={c.waiting > 0} muted={!isActive} />
-      </div>
-
-      <div
-        className={`mt-4 flex items-center justify-between border-t pt-3 text-[11px] ${
-          isActive
-            ? "border-border/70 text-muted-foreground"
-            : "border-[color:var(--border-subtle)] text-[color:var(--text-tertiary)]"
-        }`}
-      >
-        <span className="inline-flex items-center gap-2">
-          <span
-            className={`h-1.5 w-1.5 rounded-full ${
-              isActive ? healthDot[c.health] : "bg-[color:var(--text-disabled)]"
-            }`}
-          />
-          {healthLabel[c.health]}
-        </span>
-        <span className="tabular-nums">{c.lastMessage}</span>
-      </div>
+      {/* No per-channel stat grid.
+          Unread / customers / waiting require a future channel summary API. */}
 
       <div className="mt-4 flex flex-col gap-2">
         {isActive ? (
@@ -150,41 +119,6 @@ function ChannelCard({ c }: { c: ChannelOverview }) {
   );
 }
 
-function Stat({
-  label,
-  value,
-  highlight,
-  muted,
-}: {
-  label: string;
-  value: number;
-  highlight?: boolean;
-  muted?: boolean;
-}) {
-  return (
-    <div
-      className={`rounded-lg px-2 py-2 ${
-        muted ? "bg-[color:var(--bg-app)]" : "bg-surface-muted/60"
-      }`}
-    >
-      <div
-        className={`text-base font-medium tabular-nums ${
-          muted ? "text-[color:var(--text-tertiary)]" : highlight ? "text-primary" : ""
-        }`}
-      >
-        {value}
-      </div>
-      <div
-        className={`text-[10px] uppercase tracking-wider ${
-          muted ? "text-[color:var(--text-disabled)]" : "text-muted-foreground"
-        }`}
-      >
-        {label}
-      </div>
-    </div>
-  );
-}
-
 function ChannelsPage() {
   const stateOverride = useStateParam();
   if (stateOverride === "no-active") {
@@ -207,55 +141,44 @@ function ChannelsPage() {
     );
   }
 
-  const totals = channelOverview.reduce(
-    (acc, c) => ({
-      unread: acc.unread + c.unread,
-      customers: acc.customers + c.customers,
-      waiting: acc.waiting + c.waiting,
-    }),
-    { unread: 0, customers: 0, waiting: 0 },
-  );
+  // Honest product-roadmap counts sourced from the static registry.
+  // These reflect integration status, not live runtime counts.
+  const activeCount = CHANNEL_ORDER.filter((k) => CHANNELS[k].roadmapStatus === "active").length;
+  const plannedCount = CHANNEL_ORDER.filter((k) => CHANNELS[k].roadmapStatus === "planned").length;
+  const futureCount = CHANNEL_ORDER.filter((k) => CHANNELS[k].roadmapStatus === "future").length;
+  const totalCount = CHANNEL_ORDER.length;
 
   return (
     <>
       <div className="mx-auto max-w-7xl px-4 py-6 lg:px-8 lg:py-8 space-y-6">
         <PageHeader
           title="Channels"
-          description="See where messages come from, what's waiting, and which sources are live."
+          description="See where messages come from and which sources are live."
         />
         <MockBanner />
 
-        {/* Totals */}
+        {/* Channel roadmap summary — static product status, not live runtime counts. */}
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <Totals icon={Inbox} label="Total unread" value={totals.unread} tone="info" />
-          <Totals
-            icon={Users}
-            label="Customers across channels"
-            value={totals.customers}
-            tone="primary"
-          />
-          <Totals icon={Clock} label="Waiting for operator" value={totals.waiting} tone="warning" />
-          <Totals
-            icon={Activity}
-            label="Active sources"
-            value={channelOverview.filter((c) => c.status === "Mock Active").length}
-            tone="success"
-          />
+          <Totals icon={Activity} label="Active sources" value={activeCount} tone="success" />
+          <Totals icon={Inbox} label="Planned channels" value={plannedCount} tone="info" />
+          <Totals icon={Info} label="Future channels" value={futureCount} tone="neutral" />
+          <Totals icon={LayoutGrid} label="Total channels" value={totalCount} tone="neutral" />
         </div>
 
         {/* Cards — swipeable on mobile, grid on larger */}
         <div className="-mx-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:overflow-visible sm:px-0">
           <div className="flex gap-4 sm:grid sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
-            {channelOverview.map((c) => (
-              <div key={c.key} className="w-[280px] shrink-0 sm:w-auto">
-                <ChannelCard c={c} />
+            {CHANNEL_ORDER.map((key) => (
+              <div key={key} className="w-[280px] shrink-0 sm:w-auto">
+                <ChannelCard channelKey={key} />
               </div>
             ))}
           </div>
         </div>
 
         <p className="text-[11px] text-muted-foreground">
-          Channel data is mock. No provider SDK is connected. Operators send every reply.
+          Per-channel statistics (unread, customers, waiting) require a future channel summary API.
+          No provider SDK is connected. Operators send every reply.
         </p>
       </div>
     </>
