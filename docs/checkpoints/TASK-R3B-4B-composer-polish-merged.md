@@ -4,9 +4,9 @@
 
 Record the merge of R3B-4B: Composer Polish in the UI repository.
 
-- **UI repository:** `iranservice/ai-reception-saas-a7cff9d2`
+- **UI repository:** `workdabiri/ai-reception-saas-a7cff9d2`
 - **UI main commit:** `5e6211f`
-- **Backend reference repository:** `iranservice/ai-reception-saas`
+- **Backend reference repository:** `workdabiri/ai-reception-saas`
 - **Backend reference commit:** `0ceeb21`
 
 ---
@@ -15,7 +15,7 @@ Record the merge of R3B-4B: Composer Polish in the UI repository.
 
 | Field | Value |
 |---|---|
-| PR | [#12 feat(r3b-4b): add auto-scroll and character counter to composer](https://github.com/iranservice/ai-reception-saas-a7cff9d2/pull/12) |
+| PR | [#12 feat(r3b-4b): add auto-scroll and character counter to composer](https://github.com/workdabiri/ai-reception-saas-a7cff9d2/pull/12) |
 | Approved head | `7f4261c` |
 | Squash merge commit | `5e6211f` |
 | Base main before merge | `a0a25a3` |

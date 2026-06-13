@@ -14,9 +14,9 @@ This checkpoint establishes that the frontend API integration layer — typed fe
 
 | Item | Value |
 |---|---|
-| **UI repository** | `iranservice/ai-reception-saas-a7cff9d2` |
+| **UI repository** | `workdabiri/ai-reception-saas-a7cff9d2` |
 | **UI main commit** | `60649e4` |
-| **Backend reference** | `iranservice/ai-reception-saas` |
+| **Backend reference** | `workdabiri/ai-reception-saas` |
 | **Backend reference commit** | `0ceeb21` |
 
 ---

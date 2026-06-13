@@ -4,9 +4,9 @@
 
 Record the merge of R3B-2A: the first live-data inbox page in the UI repo.
 
-- **UI repository:** `iranservice/ai-reception-saas-a7cff9d2`
+- **UI repository:** `workdabiri/ai-reception-saas-a7cff9d2`
 - **UI main commit:** `1b9cf28`
-- **Backend reference repository:** `iranservice/ai-reception-saas`
+- **Backend reference repository:** `workdabiri/ai-reception-saas`
 - **Backend reference commit:** `0ceeb21`
 
 ---
@@ -15,7 +15,7 @@ Record the merge of R3B-2A: the first live-data inbox page in the UI repo.
 
 | Field | Value |
 |---|---|
-| PR | [#4 feat(r3b-2a): replace mock inbox with API-backed conversation list](https://github.com/iranservice/ai-reception-saas-a7cff9d2/pull/4) |
+| PR | [#4 feat(r3b-2a): replace mock inbox with API-backed conversation list](https://github.com/workdabiri/ai-reception-saas-a7cff9d2/pull/4) |
 | Approved head | `8bc9fc7` |
 | Squash merge commit | `1b9cf28` |
 | Base main before merge | `18a1fcf` |

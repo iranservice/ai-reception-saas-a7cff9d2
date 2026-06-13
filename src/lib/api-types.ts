@@ -4,7 +4,7 @@
  * TypeScript types matching the backend R1/R2 domain contracts.
  * These are the UI-facing representations of backend entities.
  *
- * Source of truth: iranservice/ai-reception-saas
+ * Source of truth: workdabiri/ai-reception-saas
  *   - src/domains/conversations/types.ts
  *   - src/domains/crm/types.ts
  *   - src/app/api/_shared/responses.ts

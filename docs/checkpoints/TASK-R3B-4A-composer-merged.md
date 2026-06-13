@@ -4,9 +4,9 @@
 
 Record the merge of R3B-4A: message composer with Reply and Internal Note modes added to the conversation detail page.
 
-- **UI repository:** `iranservice/ai-reception-saas-a7cff9d2`
+- **UI repository:** `workdabiri/ai-reception-saas-a7cff9d2`
 - **UI main commit:** `7daff04`
-- **Backend reference repository:** `iranservice/ai-reception-saas`
+- **Backend reference repository:** `workdabiri/ai-reception-saas`
 - **Backend reference commit:** `0ceeb21`
 
 ---
@@ -15,7 +15,7 @@ Record the merge of R3B-4A: message composer with Reply and Internal Note modes 
 
 | Field | Value |
 |---|---|
-| PR | [#10 feat(r3b-4a): add message composer with reply and internal note modes](https://github.com/iranservice/ai-reception-saas-a7cff9d2/pull/10) |
+| PR | [#10 feat(r3b-4a): add message composer with reply and internal note modes](https://github.com/workdabiri/ai-reception-saas-a7cff9d2/pull/10) |
 | Approved head | `688c428` |
 | Squash merge commit | `7daff04` |
 | Base main before merge | `8724503` |

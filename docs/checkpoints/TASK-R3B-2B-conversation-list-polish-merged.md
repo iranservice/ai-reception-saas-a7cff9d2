@@ -4,9 +4,9 @@
 
 Record the merge of R3B-2B: pagination, channel filter, and UX polish for the API-backed `/inbox` conversation list.
 
-- **UI repository:** `iranservice/ai-reception-saas-a7cff9d2`
+- **UI repository:** `workdabiri/ai-reception-saas-a7cff9d2`
 - **UI main commit:** `32281ce`
-- **Backend reference repository:** `iranservice/ai-reception-saas`
+- **Backend reference repository:** `workdabiri/ai-reception-saas`
 - **Backend reference commit:** `0ceeb21`
 
 ---
@@ -15,7 +15,7 @@ Record the merge of R3B-2B: pagination, channel filter, and UX polish for the AP
 
 | Field | Value |
 |---|---|
-| PR | [#6 feat(r3b-2b): polish conversation list with filters and pagination](https://github.com/iranservice/ai-reception-saas-a7cff9d2/pull/6) |
+| PR | [#6 feat(r3b-2b): polish conversation list with filters and pagination](https://github.com/workdabiri/ai-reception-saas-a7cff9d2/pull/6) |
 | Approved head | `f01afcc` |
 | Squash merge commit | `32281ce` |
 | Base main before merge | `3b63049` |

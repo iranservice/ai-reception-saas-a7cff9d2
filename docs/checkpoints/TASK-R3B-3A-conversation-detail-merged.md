@@ -4,9 +4,9 @@
 
 Record the merge of R3B-3A: first conversation detail page with read-only message timeline, and inbox row linkification.
 
-- **UI repository:** `iranservice/ai-reception-saas-a7cff9d2`
+- **UI repository:** `workdabiri/ai-reception-saas-a7cff9d2`
 - **UI main commit:** `245c60e`
-- **Backend reference repository:** `iranservice/ai-reception-saas`
+- **Backend reference repository:** `workdabiri/ai-reception-saas`
 - **Backend reference commit:** `0ceeb21`
 
 ---
@@ -15,7 +15,7 @@ Record the merge of R3B-3A: first conversation detail page with read-only messag
 
 | Field | Value |
 |---|---|
-| PR | [#8 feat(r3b-3a): add conversation detail page with message timeline](https://github.com/iranservice/ai-reception-saas-a7cff9d2/pull/8) |
+| PR | [#8 feat(r3b-3a): add conversation detail page with message timeline](https://github.com/workdabiri/ai-reception-saas-a7cff9d2/pull/8) |
 | Approved head | `9a28919` |
 | Squash merge commit | `245c60e` |
 | Base main before merge | `7c7b0dc` |
